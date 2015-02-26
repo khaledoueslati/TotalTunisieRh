@@ -1,6 +1,7 @@
 <?php
 namespace DataLayerBundle\Managers;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use \Symfony\Component\Config\Definition\Exception\Exception;
 class GestionT360Evaluation {
@@ -38,6 +39,24 @@ class GestionT360Evaluation {
 
     public function getEvalToDiplay($cin)
     {
+        $repository=$this->EntityManager->getRepository("DataLayerBundle:Employees");
+        $person=$repository->find($cin);
+        $id_direction=$person->getPoste()->getDirection()->getIdDirection();
+        $niveauPoste=$person->getPoste()->getPoste()->getNiveau();
+        $Superieur=$person->getSupHierarchique();
+        $cinSup=$Superieur->getCin();
+        // le cas
+        $query=$this->EntityManager->createQuery("select eval
+                                                  from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
+                                                  WHERE (employee.poste=dp.idDirectionPostes AND
+                                                        dp.Direction=$id_direction AND
+                                                        eval.cinEvalue=employee.cin AND
+                                                        dp.Poste=poste.idPoste AND
+                                                        poste.niveau=$niveauPoste)  OR
+                                                        (eval.cinEvalue=$cinSup) OR
+                                                        (eval.cinEvalue=employee.cin AND employee.supHoerarchique=$cin)
+                                                        " );
+        return $query->getResult();
 
     }
 } 

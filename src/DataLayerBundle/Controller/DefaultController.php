@@ -15,7 +15,8 @@ class DefaultController extends Controller
      */
     public function indexAction($cin)
     {
-        $person=$this->get("t360evaluation.service")->getByEmployee($cin);
+
+        $person=$this->get("t360evaluation.service")->getEvalToDiplay($cin);
         $res=$this->get("jms_serializer")->serialize($person, "json");
         return array('name' => $res);
     }
