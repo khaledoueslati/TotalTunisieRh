@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="TsChoix" table="ts_choix">
+    <indexes>
+      <index name="fk_Choix_Questions1_idx" columns="Questions_idQuestion"/>
+    </indexes>
+    <id name="idchoix" type="integer" column="idChoix">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="libelle" type="string" column="Libelle" length="45" nullable="true"/>
+    <many-to-one field="questionsquestion" target-entity="TsQuestions">
+      <join-columns>
+        <join-column name="Questions_idQuestion" referenced-column-name="idQuestion"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

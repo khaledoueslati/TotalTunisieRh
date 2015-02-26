@@ -1,0 +1,12 @@
+parameters:
+    employeeServiceclass: DataLayerBundle\Managers\GestionEmployee
+    t360evaluationServiceclass: DataLayerBundle\Managers\GestionT360Evaluation
+
+services:
+    employee.service:
+        class: "%employeeServiceclass%"
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    t360evaluation.service:
+        class: "%t360evaluationServiceclass%"
+        arguments: ["@doctrine.orm.entity_manager"]

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Jetons" table="jetons">
+    <indexes>
+      <index name="fk_TS_Jetons_TS_Sessions_idx" columns="TS_Sessions_idTS_Session"/>
+    </indexes>
+    <id name="idtsJeton" type="integer" column="idTS_Jeton">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="tsJeton" type="string" column="TS_Jeton" length="45" nullable="true"/>
+    <field name="valide" type="boolean" column="Valide" nullable="true"/>
+    <many-to-one field="tsSessionstsSession" target-entity="SessionsRh">
+      <join-columns>
+        <join-column name="TS_Sessions_idTS_Session" referenced-column-name="idTS_Session"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

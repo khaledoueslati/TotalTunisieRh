@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="T360Reponses" table="t360_reponses">
+    <indexes>
+      <index name="eval_reponse_idx" columns="id_eval"/>
+      <index name="question_reponse_idx" columns="id_question"/>
+      <index name="jetons_reponses_idx" columns="id_jeton"/>
+    </indexes>
+    <id name="idReponses" type="integer" column="id_reponses">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="valeur" type="integer" column="valeur" nullable="false"/>
+    <many-to-one field="idQuestion" target-entity="T360Questions">
+      <join-columns>
+        <join-column name="id_question" referenced-column-name="id_questions"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idJeton" target-entity="Jetons">
+      <join-columns>
+        <join-column name="id_jeton" referenced-column-name="idTS_Jeton"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idEval" target-entity="T360Evaluations">
+      <join-columns>
+        <join-column name="id_eval" referenced-column-name="id_evaluation"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="T360Axes" table="t360_axes">
+    <unique-constraints>
+      <unique-constraint name="id_axes_UNIQUE" columns="id_axes"/>
+    </unique-constraints>
+    <id name="idAxes" type="integer" column="id_axes">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="libelle" type="string" column="libelle" length="45" nullable="true"/>
+    <many-to-many field="idEval" target-entity="T360Evaluations" mapped-by="idAxe"/>
+  </entity>
+</doctrine-mapping>

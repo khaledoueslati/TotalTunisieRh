@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="TsQuestions" table="ts_questions">
+    <indexes>
+      <index name="fk_Questions_Thematiques_idx" columns="Thematiques_idThematique"/>
+    </indexes>
+    <id name="idquestion" type="integer" column="idQuestion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="enonce" type="string" column="Enonce" length="100" nullable="true"/>
+    <many-to-one field="thematiquesthematique" target-entity="TsThematiques">
+      <join-columns>
+        <join-column name="Thematiques_idThematique" referenced-column-name="idThematique"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

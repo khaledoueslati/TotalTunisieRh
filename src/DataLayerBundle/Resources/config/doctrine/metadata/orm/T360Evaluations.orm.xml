@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="T360Evaluations" table="t360_evaluations">
+    <indexes>
+      <index name="evaluee_idx" columns="cin_evalue"/>
+    </indexes>
+    <id name="idEvaluation" type="integer" column="id_evaluation">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="dateDebut" type="string" column="date_debut" length="45" nullable="false"/>
+    <field name="dateFin" type="string" column="date_fin" length="45" nullable="true"/>
+    <many-to-one field="cinEvalue" target-entity="Employees">
+      <join-columns>
+        <join-column name="cin_evalue" referenced-column-name="cin"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="idAxe" target-entity="T360Axes" inversed-by="idEval">
+      <join-table name="t360_eval_axes">
+        <join-columns>
+          <join-column name="id_eval" referenced-column-name="id_evaluation"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_axe" referenced-column-name="id_axes"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

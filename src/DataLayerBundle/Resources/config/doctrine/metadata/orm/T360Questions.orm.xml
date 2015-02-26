@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="T360Questions" table="t360_questions">
+    <indexes>
+      <index name="axe_idx" columns="id_axe"/>
+    </indexes>
+    <id name="idQuestions" type="integer" column="id_questions">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="enonce" type="string" column="enonce" length="45" nullable="false"/>
+    <many-to-one field="idAxe" target-entity="T360Axes">
+      <join-columns>
+        <join-column name="id_axe" referenced-column-name="id_axes"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
