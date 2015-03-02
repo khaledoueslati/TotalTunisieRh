@@ -41,9 +41,7 @@ class GestionEmployee {
 
     }
 
-    public function Update($entity){
 
-    }
 
     public function Delete($entity)
     {

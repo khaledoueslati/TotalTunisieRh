@@ -15,11 +15,11 @@ class Directions
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_direction", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idDirection;
+    private $id;
 
     /**
      * @var string
@@ -34,10 +34,10 @@ class Directions
      * @ORM\ManyToMany(targetEntity="Postes", inversedBy="idDirection")
      * @ORM\JoinTable(name="directions_postes",
      *   joinColumns={
-     *     @ORM\JoinColumn(name="id_direction", referencedColumnName="id_direction")
+     *     @ORM\JoinColumn(name="id_direction", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="id_poste", referencedColumnName="id_poste")
+     *     @ORM\JoinColumn(name="id_poste", referencedColumnName="id")
      *   }
      * )
      */
@@ -53,13 +53,13 @@ class Directions
 
 
     /**
-     * Get idDirection
+     * Get id
      *
      * @return integer 
      */
-    public function getIdDirection()
+    public function getId()
     {
-        return $this->idDirection;
+        return $this->id;
     }
 
     /**

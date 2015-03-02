@@ -4,13 +4,13 @@
     <indexes>
       <index name="axe_idx" columns="id_axe"/>
     </indexes>
-    <id name="idQuestions" type="integer" column="id_questions">
+    <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="enonce" type="string" column="enonce" length="45" nullable="false"/>
     <many-to-one field="idAxe" target-entity="T360Axes">
       <join-columns>
-        <join-column name="id_axe" referenced-column-name="id_axes"/>
+        <join-column name="id_axe" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

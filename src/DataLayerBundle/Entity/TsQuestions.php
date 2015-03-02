@@ -15,11 +15,11 @@ class TsQuestions
     /**
      * @var integer
      *
-     * @ORM\Column(name="idQuestion", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idquestion;
+    private $id;
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class TsQuestions
      *
      * @ORM\ManyToOne(targetEntity="TsThematiques")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Thematiques_idThematique", referencedColumnName="idThematique")
+     *   @ORM\JoinColumn(name="Thematiques_idThematique", referencedColumnName="id")
      * })
      */
     private $thematiquesthematique;
@@ -41,13 +41,13 @@ class TsQuestions
 
 
     /**
-     * Get idquestion
+     * Get id
      *
      * @return integer 
      */
-    public function getIdquestion()
+    public function getId()
     {
-        return $this->idquestion;
+        return $this->id;
     }
 
     /**

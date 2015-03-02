@@ -15,11 +15,11 @@ class TsThematiques
     /**
      * @var integer
      *
-     * @ORM\Column(name="idThematique", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idthematique;
+    private $id;
 
     /**
      * @var string
@@ -31,13 +31,13 @@ class TsThematiques
 
 
     /**
-     * Get idthematique
+     * Get id
      *
      * @return integer 
      */
-    public function getIdthematique()
+    public function getId()
     {
-        return $this->idthematique;
+        return $this->id;
     }
 
     /**

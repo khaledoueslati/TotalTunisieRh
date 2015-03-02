@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * T360Axes
  *
- * @ORM\Table(name="t360_axes", uniqueConstraints={@ORM\UniqueConstraint(name="id_axes_UNIQUE", columns={"id_axes"})})
+ * @ORM\Table(name="t360_axes", uniqueConstraints={@ORM\UniqueConstraint(name="id_axes_UNIQUE", columns={"id"})})
  * @ORM\Entity
  */
 class T360Axes
@@ -15,11 +15,11 @@ class T360Axes
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_axes", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idAxes;
+    private $id;
 
     /**
      * @var string
@@ -45,13 +45,13 @@ class T360Axes
 
 
     /**
-     * Get idAxes
+     * Get id
      *
      * @return integer 
      */
-    public function getIdAxes()
+    public function getId()
     {
-        return $this->idAxes;
+        return $this->id;
     }
 
     /**

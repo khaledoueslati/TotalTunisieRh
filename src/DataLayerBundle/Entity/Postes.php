@@ -15,11 +15,11 @@ class Postes
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_poste", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idPoste;
+    private $id;
 
     /**
      * @var string
@@ -52,13 +52,13 @@ class Postes
 
 
     /**
-     * Get idPoste
+     * Get id
      *
      * @return integer 
      */
-    public function getIdPoste()
+    public function getId()
     {
-        return $this->idPoste;
+        return $this->id;
     }
 
     /**

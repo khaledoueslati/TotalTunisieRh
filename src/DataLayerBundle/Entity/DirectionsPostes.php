@@ -12,11 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 class DirectionsPostes {
     /**
      * @var integer
-     * @ORM\Column(name="id_directions_postes", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idDirectionPostes;
+    private $id;
     /**
      * @var \Directions
      * @ORM\ManyToOne(targetEntity="Directions")
@@ -69,17 +69,17 @@ class DirectionsPostes {
     /**
      * @return int
      */
-    public function getIdDirectionPostes()
+    public function getId()
     {
-        return $this->idDirectionPostes;
+        return $this->id;
     }
 
     /**
      * @param int $idDirectionPostes
      */
-    public function setIdDirectionPostes($idDirectionPostes)
+    public function setId($idDirectionPostes)
     {
-        $this->idDirectionPostes = $idDirectionPostes;
+        $this->id = $idDirectionPostes;
     }
 
     public function __toString(){

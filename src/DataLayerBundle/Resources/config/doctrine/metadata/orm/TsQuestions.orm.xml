@@ -4,13 +4,13 @@
     <indexes>
       <index name="fk_Questions_Thematiques_idx" columns="Thematiques_idThematique"/>
     </indexes>
-    <id name="idquestion" type="integer" column="idQuestion">
+    <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="enonce" type="string" column="Enonce" length="100" nullable="true"/>
     <many-to-one field="thematiquesthematique" target-entity="TsThematiques">
       <join-columns>
-        <join-column name="Thematiques_idThematique" referenced-column-name="idThematique"/>
+        <join-column name="Thematiques_idThematique" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

@@ -15,11 +15,11 @@ class TsChoix
     /**
      * @var integer
      *
-     * @ORM\Column(name="idChoix", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idchoix;
+    private $id;
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class TsChoix
      *
      * @ORM\ManyToOne(targetEntity="TsQuestions")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Questions_idQuestion", referencedColumnName="idQuestion")
+     *   @ORM\JoinColumn(name="Questions_idQuestion", referencedColumnName="id")
      * })
      */
     private $questionsquestion;
@@ -41,13 +41,13 @@ class TsChoix
 
 
     /**
-     * Get idchoix
+     * Get id
      *
      * @return integer 
      */
-    public function getIdchoix()
+    public function getId()
     {
-        return $this->idchoix;
+        return $this->id;
     }
 
     /**

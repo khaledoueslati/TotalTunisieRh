@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="Directions" table="directions">
-    <id name="idDirection" type="integer" column="id_direction">
+    <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="libelle" type="string" column="libelle" length="45" nullable="false"/>
     <many-to-many field="idPoste" target-entity="Postes" inversed-by="idDirection">
       <join-table name="directions_postes">
         <join-columns>
-          <join-column name="id_direction" referenced-column-name="id_direction"/>
+          <join-column name="id_direction" referenced-column-name="id"/>
         </join-columns>
         <inverse-join-columns>
-          <join-column name="id_poste" referenced-column-name="id_poste"/>
+          <join-column name="id_poste" referenced-column-name="id"/>
         </inverse-join-columns>
       </join-table>
     </many-to-many>

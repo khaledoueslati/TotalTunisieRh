@@ -15,11 +15,11 @@ class T360Questions
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_questions", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idQuestions;
+    private $id;
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class T360Questions
      *
      * @ORM\ManyToOne(targetEntity="T360Axes")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_axe", referencedColumnName="id_axes")
+     *   @ORM\JoinColumn(name="id_axe", referencedColumnName="id")
      * })
      */
     private $idAxe;
@@ -41,13 +41,13 @@ class T360Questions
 
 
     /**
-     * Get idQuestions
+     * Get id
      *
      * @return integer 
      */
-    public function getIdQuestions()
+    public function getId()
     {
-        return $this->idQuestions;
+        return $this->id;
     }
 
     /**

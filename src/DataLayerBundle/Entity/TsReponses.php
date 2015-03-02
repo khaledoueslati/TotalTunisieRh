@@ -15,11 +15,11 @@ class TsReponses
     /**
      * @var integer
      *
-     * @ORM\Column(name="idReponse", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idreponse;
+    private $id;
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class TsReponses
      *
      * @ORM\ManyToOne(targetEntity="TsChoix")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Choix_idChoix", referencedColumnName="idChoix")
+     *   @ORM\JoinColumn(name="Choix_idChoix", referencedColumnName="id")
      * })
      */
     private $choixchoix;
@@ -43,17 +43,17 @@ class TsReponses
      *
      * @ORM\ManyToOne(targetEntity="TsQuestions")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Questions_idQuestion", referencedColumnName="idQuestion")
+     *   @ORM\JoinColumn(name="Questions_idQuestion", referencedColumnName="id")
      * })
      */
     private $questionsquestion;
 
     /**
-     * @var \Jetons
+     * @var \TsJetons
      *
-     * @ORM\ManyToOne(targetEntity="Jetons")
+     * @ORM\ManyToOne(targetEntity="TsJetons")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="TS_Jetons_idTS_Jeton", referencedColumnName="idTS_Jeton")
+     *   @ORM\JoinColumn(name="TS_Jetons_idTS_Jeton", referencedColumnName="id")
      * })
      */
     private $tsJetonstsJeton;
@@ -61,13 +61,13 @@ class TsReponses
 
 
     /**
-     * Get idreponse
+     * Get id
      *
      * @return integer 
      */
-    public function getIdreponse()
+    public function getId()
     {
-        return $this->idreponse;
+        return $this->id;
     }
 
     /**
@@ -142,10 +142,10 @@ class TsReponses
     /**
      * Set tsJetonstsJeton
      *
-     * @param \DataLayerBundle\Entity\Jetons $tsJetonstsJeton
+     * @param \DataLayerBundle\Entity\TsJetons $tsJetonstsJeton
      * @return TsReponses
      */
-    public function setTsJetonstsJeton(\DataLayerBundle\Entity\Jetons $tsJetonstsJeton = null)
+    public function setTsJetonstsJeton(\DataLayerBundle\Entity\TsJetons $tsJetonstsJeton = null)
     {
         $this->tsJetonstsJeton = $tsJetonstsJeton;
 
@@ -155,7 +155,7 @@ class TsReponses
     /**
      * Get tsJetonstsJeton
      *
-     * @return \DataLayerBundle\Entity\Jetons 
+     * @return \DataLayerBundle\Entity\TsJetons 
      */
     public function getTsJetonstsJeton()
     {

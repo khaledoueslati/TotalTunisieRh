@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * T360Reponses
  *
- * @ORM\Table(name="t360_reponses", indexes={@ORM\Index(name="eval_reponse_idx", columns={"id_eval"}), @ORM\Index(name="question_reponse_idx", columns={"id_question"}), @ORM\Index(name="jetons_reponses_idx", columns={"id_jeton"})})
+ * @ORM\Table(name="t360_reponses", indexes={@ORM\Index(name="id_employee", columns={"id_employee"}), @ORM\Index(name="id_eval", columns={"id_eval"}), @ORM\Index(name="id_question", columns={"id_question"})})
  * @ORM\Entity
  */
 class T360Reponses
@@ -15,11 +15,11 @@ class T360Reponses
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_reponses", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idReponses;
+    private $id;
 
     /**
      * @var integer
@@ -29,31 +29,31 @@ class T360Reponses
     private $valeur;
 
     /**
+     * @var \Employees
+     *
+     * @ORM\ManyToOne(targetEntity="Employees")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_employee", referencedColumnName="cin")
+     * })
+     */
+    private $idEmployee;
+
+    /**
      * @var \T360Evaluations
      *
      * @ORM\ManyToOne(targetEntity="T360Evaluations")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_eval", referencedColumnName="id_evaluation")
+     *   @ORM\JoinColumn(name="id_eval", referencedColumnName="id")
      * })
      */
     private $idEval;
-
-    /**
-     * @var \Jetons
-     *
-     * @ORM\ManyToOne(targetEntity="Jetons")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_jeton", referencedColumnName="idTS_Jeton")
-     * })
-     */
-    private $idJeton;
 
     /**
      * @var \T360Questions
      *
      * @ORM\ManyToOne(targetEntity="T360Questions")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_question", referencedColumnName="id_questions")
+     *   @ORM\JoinColumn(name="id_question", referencedColumnName="id")
      * })
      */
     private $idQuestion;
@@ -61,13 +61,13 @@ class T360Reponses
 
 
     /**
-     * Get idReponses
+     * Get id
      *
      * @return integer 
      */
-    public function getIdReponses()
+    public function getId()
     {
-        return $this->idReponses;
+        return $this->id;
     }
 
     /**
@@ -94,6 +94,29 @@ class T360Reponses
     }
 
     /**
+     * Set idEmployee
+     *
+     * @param \DataLayerBundle\Entity\Employees $idEmployee
+     * @return T360Reponses
+     */
+    public function setIdEmployee(\DataLayerBundle\Entity\Employees $idEmployee = null)
+    {
+        $this->idEmployee = $idEmployee;
+
+        return $this;
+    }
+
+    /**
+     * Get idEmployee
+     *
+     * @return \DataLayerBundle\Entity\Employees 
+     */
+    public function getIdEmployee()
+    {
+        return $this->idEmployee;
+    }
+
+    /**
      * Set idEval
      *
      * @param \DataLayerBundle\Entity\T360Evaluations $idEval
@@ -114,29 +137,6 @@ class T360Reponses
     public function getIdEval()
     {
         return $this->idEval;
-    }
-
-    /**
-     * Set idJeton
-     *
-     * @param \DataLayerBundle\Entity\Jetons $idJeton
-     * @return T360Reponses
-     */
-    public function setIdJeton(\DataLayerBundle\Entity\Jetons $idJeton = null)
-    {
-        $this->idJeton = $idJeton;
-
-        return $this;
-    }
-
-    /**
-     * Get idJeton
-     *
-     * @return \DataLayerBundle\Entity\Jetons 
-     */
-    public function getIdJeton()
-    {
-        return $this->idJeton;
     }
 
     /**

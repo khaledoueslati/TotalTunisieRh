@@ -61,7 +61,7 @@ class Employees
      *
      * @ORM\ManyToOne(targetEntity="DirectionsPostes")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="poste", referencedColumnName="id_directions_postes")
+     *   @ORM\JoinColumn(name="poste", referencedColumnName="id")
      * })
      */
     private $poste;
@@ -71,7 +71,7 @@ class Employees
      *
      * @ORM\ManyToOne(targetEntity="Roles")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="role", referencedColumnName="id_roles")
+     *   @ORM\JoinColumn(name="role", referencedColumnName="id")
      * })
      */
     private $role;
@@ -280,10 +280,5 @@ class Employees
     public function getSupHierarchique()
     {
         return $this->supHierarchique;
-    }
-
-    public function __toString(){
-        $var = $this->poste;
-        return (string)$var;
     }
 }

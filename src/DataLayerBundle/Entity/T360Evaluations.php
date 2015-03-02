@@ -15,11 +15,11 @@ class T360Evaluations
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_evaluation", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idEvaluation;
+    private $id;
 
     /**
      * @var string
@@ -51,10 +51,10 @@ class T360Evaluations
      * @ORM\ManyToMany(targetEntity="T360Axes", inversedBy="idEval")
      * @ORM\JoinTable(name="t360_eval_axes",
      *   joinColumns={
-     *     @ORM\JoinColumn(name="id_eval", referencedColumnName="id_evaluation")
+     *     @ORM\JoinColumn(name="id_eval", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="id_axe", referencedColumnName="id_axes")
+     *     @ORM\JoinColumn(name="id_axe", referencedColumnName="id")
      *   }
      * )
      */
@@ -70,13 +70,13 @@ class T360Evaluations
 
 
     /**
-     * Get idEvaluation
+     * Get id
      *
      * @return integer 
      */
-    public function getIdEvaluation()
+    public function getId()
     {
-        return $this->idEvaluation;
+        return $this->id;
     }
 
     /**

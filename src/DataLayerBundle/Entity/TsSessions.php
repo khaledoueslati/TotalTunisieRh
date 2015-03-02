@@ -5,26 +5,26 @@ namespace DataLayerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SessionsRh
+ * TsSessions
  *
- * @ORM\Table(name="sessions_rh")
+ * @ORM\Table(name="ts_sessions")
  * @ORM\Entity
  */
-class SessionsRh
+class TsSessions
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="idTS_Session", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idtsSession;
+    private $id;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="Annee", type="text", nullable=true)
+     * @ORM\Column(name="Annee", type="date", nullable=true)
      */
     private $annee;
 
@@ -42,30 +42,23 @@ class SessionsRh
      */
     private $nombreMagique;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="methode", type="string", length=4, nullable=false)
-     */
-    private $methode;
-
 
 
     /**
-     * Get idtsSession
+     * Get id
      *
      * @return integer 
      */
-    public function getIdtsSession()
+    public function getId()
     {
-        return $this->idtsSession;
+        return $this->id;
     }
 
     /**
      * Set annee
      *
-     * @param string $annee
-     * @return SessionsRh
+     * @param \DateTime $annee
+     * @return TsSessions
      */
     public function setAnnee($annee)
     {
@@ -77,7 +70,7 @@ class SessionsRh
     /**
      * Get annee
      *
-     * @return string 
+     * @return \DateTime 
      */
     public function getAnnee()
     {
@@ -88,7 +81,7 @@ class SessionsRh
      * Set detailsSupp
      *
      * @param string $detailsSupp
-     * @return SessionsRh
+     * @return TsSessions
      */
     public function setDetailsSupp($detailsSupp)
     {
@@ -111,7 +104,7 @@ class SessionsRh
      * Set nombreMagique
      *
      * @param integer $nombreMagique
-     * @return SessionsRh
+     * @return TsSessions
      */
     public function setNombreMagique($nombreMagique)
     {
@@ -128,28 +121,5 @@ class SessionsRh
     public function getNombreMagique()
     {
         return $this->nombreMagique;
-    }
-
-    /**
-     * Set methode
-     *
-     * @param string $methode
-     * @return SessionsRh
-     */
-    public function setMethode($methode)
-    {
-        $this->methode = $methode;
-
-        return $this;
-    }
-
-    /**
-     * Get methode
-     *
-     * @return string 
-     */
-    public function getMethode()
-    {
-        return $this->methode;
     }
 }

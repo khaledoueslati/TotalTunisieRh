@@ -6,23 +6,23 @@
       <index name="fk_Reponses_Questions1_idx" columns="Questions_idQuestion"/>
       <index name="fk_TS_Reponses_TS_Jetons1_idx" columns="TS_Jetons_idTS_Jeton"/>
     </indexes>
-    <id name="idreponse" type="integer" column="idReponse">
+    <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="date" type="string" column="Date" length="10" nullable="true"/>
-    <many-to-one field="tsJetonstsJeton" target-entity="Jetons">
+    <many-to-one field="tsJetonstsJeton" target-entity="TsJetons">
       <join-columns>
-        <join-column name="TS_Jetons_idTS_Jeton" referenced-column-name="idTS_Jeton"/>
+        <join-column name="TS_Jetons_idTS_Jeton" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="questionsquestion" target-entity="TsQuestions">
       <join-columns>
-        <join-column name="Questions_idQuestion" referenced-column-name="idQuestion"/>
+        <join-column name="Questions_idQuestion" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="choixchoix" target-entity="TsChoix">
       <join-columns>
-        <join-column name="Choix_idChoix" referenced-column-name="idChoix"/>
+        <join-column name="Choix_idChoix" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

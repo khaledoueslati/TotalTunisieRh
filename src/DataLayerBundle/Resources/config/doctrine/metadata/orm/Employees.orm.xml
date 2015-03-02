@@ -21,12 +21,12 @@
     </many-to-one>
     <many-to-one field="role" target-entity="Roles">
       <join-columns>
-        <join-column name="role" referenced-column-name="id_roles"/>
+        <join-column name="role" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="poste" target-entity="DirectionsPostes">
       <join-columns>
-        <join-column name="poste" referenced-column-name="id_directions_postes"/>
+        <join-column name="poste" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

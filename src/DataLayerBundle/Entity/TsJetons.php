@@ -5,21 +5,21 @@ namespace DataLayerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Jetons
+ * TsJetons
  *
- * @ORM\Table(name="jetons", indexes={@ORM\Index(name="fk_TS_Jetons_TS_Sessions_idx", columns={"TS_Sessions_idTS_Session"})})
+ * @ORM\Table(name="ts_jetons", indexes={@ORM\Index(name="fk_TS_Jetons_TS_Sessions_idx", columns={"TS_Sessions_idTS_Session"})})
  * @ORM\Entity
  */
-class Jetons
+class TsJetons
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="idTS_Jeton", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $idtsJeton;
+    private $id;
 
     /**
      * @var string
@@ -36,11 +36,11 @@ class Jetons
     private $valide = '0';
 
     /**
-     * @var \SessionsRh
+     * @var \TsSessions
      *
-     * @ORM\ManyToOne(targetEntity="SessionsRh")
+     * @ORM\ManyToOne(targetEntity="TsSessions")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="TS_Sessions_idTS_Session", referencedColumnName="idTS_Session")
+     *   @ORM\JoinColumn(name="TS_Sessions_idTS_Session", referencedColumnName="id")
      * })
      */
     private $tsSessionstsSession;
@@ -48,20 +48,20 @@ class Jetons
 
 
     /**
-     * Get idtsJeton
+     * Get id
      *
      * @return integer 
      */
-    public function getIdtsJeton()
+    public function getId()
     {
-        return $this->idtsJeton;
+        return $this->id;
     }
 
     /**
      * Set tsJeton
      *
      * @param string $tsJeton
-     * @return Jetons
+     * @return TsJetons
      */
     public function setTsJeton($tsJeton)
     {
@@ -84,7 +84,7 @@ class Jetons
      * Set valide
      *
      * @param boolean $valide
-     * @return Jetons
+     * @return TsJetons
      */
     public function setValide($valide)
     {
@@ -106,10 +106,10 @@ class Jetons
     /**
      * Set tsSessionstsSession
      *
-     * @param \DataLayerBundle\Entity\SessionsRh $tsSessionstsSession
-     * @return Jetons
+     * @param \DataLayerBundle\Entity\TsSessions $tsSessionstsSession
+     * @return TsJetons
      */
-    public function setTsSessionstsSession(\DataLayerBundle\Entity\SessionsRh $tsSessionstsSession = null)
+    public function setTsSessionstsSession(\DataLayerBundle\Entity\TsSessions $tsSessionstsSession = null)
     {
         $this->tsSessionstsSession = $tsSessionstsSession;
 
@@ -119,7 +119,7 @@ class Jetons
     /**
      * Get tsSessionstsSession
      *
-     * @return \DataLayerBundle\Entity\SessionsRh 
+     * @return \DataLayerBundle\Entity\TsSessions 
      */
     public function getTsSessionstsSession()
     {

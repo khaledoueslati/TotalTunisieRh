@@ -10,14 +10,26 @@ class DefaultController extends Controller
 {
 
     /**
-     * @Route("/test/{cin}")
+     * @Route("/test/{type}/{cin}")
      * @Template()
      */
-    public function indexAction($cin)
+    public function indexAction($type,$cin)
     {
 
         $person=$this->get("t360evaluation.service")->getEvalToDiplay($cin);
-        $res=$this->get("jms_serializer")->serialize($person, "json");
-        return array('name' => $res);
+        if($type=="service"){
+            //appel du Web Service
+            $serializer = $this->container->get('jms_serializer');
+            $JsonPerson = $serializer->serialize($person, 'json');
+
+            $response =new Response($JsonPerson);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        else{
+            // appel du Web Controlleur
+            return array('name' => $person);
+        }
+
     }
 }
