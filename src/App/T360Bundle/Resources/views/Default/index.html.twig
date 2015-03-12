@@ -1,0 +1,78 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block body -%}
+
+    <script>
+
+        $( document ).ready(function() {
+            console.log( "ready to charge data " );
+                var values=[];
+            var axis=[];
+
+//$.getJSON("http://localhost:8000/t360reponses/eval/1");
+            $.ajax({
+                url: "{{ path('get_reponses_by_eval',{ 'idEval': 1 }) }}"
+            }).then(function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    axis.push(data[i].enonce);
+                    values.push(parseFloat(data[i].average))
+                };
+
+                $(function () {
+
+                    $('#container').highcharts({
+
+                        chart: {
+                            polar: true,
+                            type: 'line'
+                        },
+
+                        colors: ['#FF0000', '#434348', '#90ed7d'],
+                        title: {
+                            text: 'Budget vs spending',
+                            x: -50
+                        },
+
+                        pane: {
+                            size: '80%'
+                        },
+
+                        xAxis: {
+                            categories: axis,
+                            tickmarkPlacement: 'on',
+                            lineWidth: 0
+                        },
+
+                        yAxis: {
+                            gridLineInterpolation: 'polygon',
+                            lineWidth: 0,
+                            min: 0
+                        },
+                        legend: {
+                            align: 'right',
+                            verticalAlign: 'top',
+                            y: 70,
+                            layout: 'vertical'
+                        },
+
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Allocated Budget',
+                            data: values,
+                            pointPlacement: 'on'
+                        }]
+
+                    });
+                });
+
+            });
+
+        });
+
+
+    </script>
+
+    <div id="container"  style="min-width: 400px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+{% endblock %}

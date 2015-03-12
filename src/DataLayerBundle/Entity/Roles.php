@@ -19,7 +19,7 @@ class Roles
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $idRoles;
 
     /**
      * @var string
@@ -35,9 +35,9 @@ class Roles
      *
      * @return integer 
      */
-    public function getId()
+    public function getIdRoles()
     {
-        return $this->id;
+        return $this->idRoles;
     }
 
     /**

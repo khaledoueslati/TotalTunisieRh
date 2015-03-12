@@ -16,12 +16,12 @@ class DirectionsPostes {
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $idDirectionPostes;
     /**
      * @var \Directions
      * @ORM\ManyToOne(targetEntity="Directions")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_direction", referencedColumnName="id_direction")
+     *   @ORM\JoinColumn(name="id_direction", referencedColumnName="id")
      * })
      */
     private $Direction;
@@ -29,7 +29,7 @@ class DirectionsPostes {
      * @var \Postes
      * @ORM\ManyToOne(targetEntity="Postes")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_poste", referencedColumnName="id_poste")
+     *   @ORM\JoinColumn(name="id_poste", referencedColumnName="id")
      * })
      */
     private $Poste;
@@ -69,9 +69,9 @@ class DirectionsPostes {
     /**
      * @return int
      */
-    public function getId()
+    public function getIdDirectionPostes()
     {
-        return $this->id;
+        return $this->idDirectionPostes;
     }
 
     /**

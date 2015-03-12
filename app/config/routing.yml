@@ -1,3 +1,8 @@
+app_t360:
+    resource: "@AppT360Bundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 data_layer:
     resource: "@DataLayerBundle/Controller/"
     type:     annotation

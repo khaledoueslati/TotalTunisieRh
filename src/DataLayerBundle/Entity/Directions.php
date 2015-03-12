@@ -19,7 +19,7 @@ class Directions
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $idDirection;
 
     /**
      * @var string
@@ -57,9 +57,9 @@ class Directions
      *
      * @return integer 
      */
-    public function getId()
+    public function getIdDirection()
     {
-        return $this->id;
+        return $this->idDirection;
     }
 
     /**

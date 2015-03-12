@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Khaled
- * Date: 23/02/2015
- * Time: 17:10
- */
+namespace DataLayerBundle\Managers;
 
 use Doctrine\ORM\EntityManager;
 use \Symfony\Component\Config\Definition\Exception\Exception;
@@ -29,5 +24,8 @@ class GestionT360Questions {
         return $this->EntityManager->getRepository($this->rep)->find($id);
     }
 
-
+    public function getByAxe($idAxe)
+    {
+        return $this->EntityManager->getRepository($this->rep)->findBy(array("idAxe"=>$idAxe));
+    }
 } 

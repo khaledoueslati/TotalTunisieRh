@@ -3,6 +3,7 @@
 namespace DataLayerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * T360Axes
@@ -32,6 +33,7 @@ class T360Axes
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="T360Evaluations", mappedBy="idAxe")
+     * @Exclude
      */
     private $idEval;
 

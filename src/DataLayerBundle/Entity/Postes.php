@@ -19,7 +19,7 @@ class Postes
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $idPoste;
 
     /**
      * @var string
@@ -56,9 +56,9 @@ class Postes
      *
      * @return integer 
      */
-    public function getId()
+    public function getIdPoste()
     {
-        return $this->id;
+        return $this->idDirection;
     }
 
     /**

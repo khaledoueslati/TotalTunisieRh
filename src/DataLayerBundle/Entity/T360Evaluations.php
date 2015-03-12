@@ -19,7 +19,7 @@ class T360Evaluations
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private $idEvaluation;
 
     /**
      * @var string
@@ -74,9 +74,9 @@ class T360Evaluations
      *
      * @return integer 
      */
-    public function getId()
+    public function getIdEvaluation()
     {
-        return $this->id;
+        return $this->idEvaluation;
     }
 
     /**
