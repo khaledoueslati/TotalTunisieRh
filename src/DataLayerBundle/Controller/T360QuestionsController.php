@@ -262,12 +262,27 @@ class T360QuestionsController extends Controller
     }
 
     /**
-     * @Route("/service/allquestions")
+     * @Route("/service/allquestions",name="get_all_questions")
      */
     public function getAllQuestionsAction()
     {
         $serializer = $this->container->get('jms_serializer');
         $questions_array=$this->get("t360question.service")->getAll();
+        // if(sizeof($evaluations_array)!=0)
+        $JsonQuestions = $serializer->serialize($questions_array, 'json');
+        //$evaluations_array[0]->getId();
+        $response =new Response($JsonQuestions);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     *
+     * @Route("/service/questionsPerAxe",name="questions_per_axes")
+     */
+    public function getQuestionsPerAxes(){
+        $serializer = $this->container->get('jms_serializer');
+        $questions_array=$this->get("t360question.service")->getQuestionPerAxes();
         // if(sizeof($evaluations_array)!=0)
         $JsonQuestions = $serializer->serialize($questions_array, 'json');
         //$evaluations_array[0]->getId();

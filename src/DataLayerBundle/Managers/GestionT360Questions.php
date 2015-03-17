@@ -28,4 +28,13 @@ class GestionT360Questions {
     {
         return $this->EntityManager->getRepository($this->rep)->findBy(array("idAxe"=>$idAxe));
     }
+
+    public function getQuestionPerAxes(){
+        $query = $this->EntityManager->createQuery("select axes.libelle , count(question.id) as QuestionCount from DataLayerBundle:T360Questions question , DataLayerBundle:T360Axes axes
+                                                    where axes.id = question.idAxe
+                                                    GROUP By question.idAxe");
+
+        return $query->getResult();
+    }
+
 } 

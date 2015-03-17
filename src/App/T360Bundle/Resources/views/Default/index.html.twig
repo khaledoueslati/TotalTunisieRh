@@ -1,40 +1,69 @@
 {% extends 'AppT360Bundle::BasePage.html.twig' %}
 
 {% block body -%}
-
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts-more.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/exporting.js') }}"></script>
     <script>
+        $(document).ready(function () {
+            console.log("ready to charge data ");
 
-        $( document ).ready(function() {
-            console.log( "ready to charge data " );
-                var values=[];
-            var axis=[];
 
-//$.getJSON("http://localhost:8000/t360reponses/eval/1");
+            var axis = [];
+            var ReponseGenerale = [];
+            var ReponseSub = [];
+            var ReponseSup = [];
+            var ReponseAuto = [];
+            var ReponseCollegue = [];
+            var table_data=[];
+
             $.ajax({
-                url: "{{ path('get_reponses_by_eval',{ 'idEval': 1 }) }}"
-            }).then(function(data) {
+                url: "{{ path('get_reponses_by_eval',{ 'idEval': 3 }) }}"
+            }).then(function (data) {
                 for (var i = 0; i < data.length; i++) {
-                    axis.push(data[i].enonce);
-                    values.push(parseFloat(data[i].average))
-                };
+                    if (data[i].average) {
+                        ReponseGenerale.push(parseFloat(data[i].average));
+                    }
+                    if (data[i].reponseSubordonne) {
+                        ReponseSub.push(parseFloat(data[i].reponseSubordonne));
+                    }
 
+                    if (data[i].reponseAuto) {
+                        ReponseAuto.push(parseInt(data[i].reponseAuto));
+                    }
+                    if (data[i].reponseCollegue) {
+                        ReponseCollegue.push(parseFloat(data[i].reponseCollegue));
+                    }
+                    if (data[i].reponseSup) {
+                        ReponseSup.push(parseInt(data[i].reponseSup));
+                    }
+                    if (data[i].enonce) {
+                        axis.push(data[i].enonce)
+                    }
+
+                }
+                ;
                 $(function () {
 
-                    $('#container').highcharts({
+                    $('#containerSpider').highcharts({
 
                         chart: {
                             polar: true,
-                            type: 'line'
+                            type: 'line',
+                            height: 500
+
                         },
 
-                        colors: ['#FF0000', '#434348', '#90ed7d'],
+
+                        //      colors: ['#FF0000', '#434348', '#90ed7d'],
                         title: {
-                            text: 'Budget vs spending',
-                            x: -50
+                            text: 'Synthese evaluation 360'
+
                         },
+
 
                         pane: {
-                            size: '80%'
+                            size: '90%'
                         },
 
                         xAxis: {
@@ -48,31 +77,227 @@
                             lineWidth: 0,
                             min: 0
                         },
-                        legend: {
-                            align: 'right',
-                            verticalAlign: 'top',
-                            y: 70,
-                            layout: 'vertical'
+                        exporting: {
+                            enabled: false
                         },
-
                         credits: {
                             enabled: false
                         },
                         series: [{
-                            name: 'Allocated Budget',
-                            data: values,
+                            name: 'Generale',
+                            data: ReponseGenerale,
+                            pointPlacement: 'on'
+                        }, {
+                            name: 'Subordones',
+                            data: ReponseSub,
+                            pointPlacement: 'on'
+                        }, {
+                            name: 'Auto Evaluation',
+                            data: ReponseAuto,
+                            pointPlacement: 'on'
+                        }, {
+                            name: 'Collegues',
+                            data: ReponseCollegue,
+                            pointPlacement: 'on'
+                        }, {
+                            name: 'Superieur Hierarchique',
+                            data: ReponseSup,
                             pointPlacement: 'on'
                         }]
 
                     });
+                    $('#containerLine').highcharts({
+
+                        xAxis: {
+                            categories: axis
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Evaluations '
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Generale',
+                            data: ReponseGenerale
+
+                        }, {
+                            name: 'Subordones',
+                            data: ReponseSub
+
+                        }, {
+                            name: 'Auto Evaluation',
+                            data: ReponseAuto
+
+                        }, {
+                            name: 'Collegues',
+                            data: ReponseCollegue
+
+                        }, {
+                            name: 'Superieur Hierarchique',
+                            data: ReponseSup
+
+                        }]
+                    });
                 });
 
             });
+            // chargement des données dans le tableau de details
+
+
+
+            $("#detailsTable").click(function () {
+               if(table_data.length==0){
+                   $.ajax({
+                       url: "{{ path('questions_per_axes') }}"
+                   }).then(function (data) {
+                       table_data=data;
+                       console.log("data charged ! ");
+                       console.log(data);
+                       //essai d'un seul axe
+                       var i=0;var offset=0;
+                       var compteur=0;
+                       for(var j=0; j<data.length;j++){
+                           var sommeAuto=0;
+                           var sommeSub=0;
+                           var sommeSup=0;
+                           var sommeCollegue=0;
+                                     console.log("***********j="+j);
+                           var testVariable=parseInt(data[j].QuestionCount)+offset;
+                           console.log(testVariable);
+                           for(i;i<testVariable;i++){
+                               console.log("i="+i);
+                               sommeAuto+=ReponseAuto[i];
+                               sommeSub+=ReponseSub[i];
+                               sommeCollegue+=ReponseCollegue[i];
+                               sommeSup+=ReponseSup[i];
+                           }
+                           offset=i;
+                           console.log("auto : "+sommeAuto+" Collegue :"+sommeCollegue+" subordonée : "+sommeSub+" superieur : "+sommeSup );
+                           var moyenne=(sommeAuto+sommeCollegue+sommeSub+sommeSup)/4;
+                           $("#table-to-fill").append(' <div class="row bg-info">  ' +
+                           '<div class="col-lg-4"><h5 class="text-center ">'+data[j].libelle+'</h5></div>'+
+                           ' <div class="col-lg-1">' +
+                           '<h5 class="text-center ">'+sommeCollegue+'</h5></div>' +
+                           '<div class="col-lg-2">' +
+                           '<h5 class="text-center">'+sommeSup+'</h5>' +
+                           '</div><div class="col-lg-1">' +
+                           '<h5 class="text-center">'+sommeAuto+'</h5></div>' +
+                           '<div class="col-lg-1"><h5 class="text-center">'+sommeSub+'</h5>' +
+                           '</div><div class="col-lg-1">' +
+                           '<h5 class="text-center">'+moyenne+'</h5></div>' +
+                           '<div class="col-lg-1"><h5 class="text-center">'+Math.abs(moyenne-sommeAuto)+'</h5>' +
+                           ' </div>');
+
+                           for(compteur;compteur<testVariable;compteur++){
+                               $("#table-to-fill").append(' <div class="row">  ' +
+                               '<div class="col-lg-4"><h5 class="text-center ">'+axis[compteur]+'</h5></div>'+
+                               ' <div class="col-lg-1">' +
+                               '<h5 class="text-center ">'+ReponseCollegue[compteur]+'</h5></div>' +
+                               '<div class="col-lg-2">' +
+                               '<h5 class="text-center">'+ReponseSup[compteur]+'</h5>' +
+                               '</div><div class="col-lg-1">' +
+                               '<h5 class="text-center">'+ReponseAuto[compteur]+'</h5></div>' +
+                               '<div class="col-lg-1"><h5 class="text-center">'+ReponseSub[compteur]+'</h5>' +
+                               '</div>');
+                               console.log(testVariable)
+
+                           }
+                       }
+
+                   });
+               }
+            });
 
         });
-
-
     </script>
 
-    <div id="container"  style="min-width: 400px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+    <section class="container"> <!-- upContent Container -->
+        <div class="row">
+            <div id="detailsTable" class="col-md-4 col-sm-6 col-xs-12 " data-toggle="modal" data-target="#datails-table-modal">
+                <div class="info-box hvr-grow">
+                    <span class="info-box-icon bg-red"><i class="fa fa-expand top-buffer"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Tableau d'evaluation</span>
+                        <span class="info-box-number">Mr Alexander</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+        </div>
+
+        <div class="modal fade" id="datails-table-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Tableau d'évaluation </h3>
+                    </div>
+                    <div class="modal-body" id="table-to-fill">
+                        <div class="row">
+                            <div class="col-lg-offset-4 col-lg-1">
+                                <h5 class="text-center text-blue">Co</h5>
+                            </div>
+                            <div class="col-lg-2">
+                                <h5 class="text-center text-blue">Sup-h</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5 class="text-center text-blue">A</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5 class="text-center text-blue">Sub</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5 class="text-center text-blue">Moy</h5>
+                            </div>
+                            <div class="col-lg-1">
+                                <h5 class="text-center text-blue">Ecart</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-lg-3"><h5 class="text-center text-blue">Co</h5></div>
+                            <div class="col-lg-3"><h5 class="text-center text-blue">Sup-h</h5></div>
+                            <div class="col-lg-3"><h5 class="text-center text-blue">A</h5></div>
+                            <div class="col-lg-3"><h5 class="text-center text-blue">Sub</h5></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3"><p class="text-center ">Collegue</p></div>
+                            <div class="col-lg-3"><p class="text-center">Superieur hierarchique</p></div>
+                            <div class="col-lg-3"><p class="text-center">Auto Evaluation</p></div>
+                            <div class="col-lg-3"><p class="text-center">Subordonnée</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="col-lg-5"><!--  spider schema -->
+            <div id="containerSpider" class="box box-body box-danger"></div>
+        </div>
+        <!-- /spider schema -->
+
+        <div class="col-lg-7">
+            <div class="row"> <!-- linear schema -->
+                <div id="containerLine" class="box box-body box-danger"></div>
+            </div>
+            <!-- /linear schema -->
+
+        </div>
+    </div>
 {% endblock %}

@@ -256,12 +256,25 @@ class T360ReponsesController extends Controller
 
         $serializer = $this->container->get('jms_serializer');
 
-      // $reponse=$this->container->get('t360reponse.service')->getReponsesByEvaluation($idEval);
-       // $reponse=$this->container->get('t360reponse.service')->getSuperieurResponsesByEvaluation($idEval);
-        //$reponse=$this->container->get('t360reponse.service')->getSubordoneeResponsesByEvaluation($idEval);
-        $reponse=$this->container->get('t360reponse.service')->getAutoResponsesByEvaluation(1);
-        //$response =new Response($serializer->serialize($reponse,'json'));
-        $response=new Response($serializer->serialize($reponse,'json'),200,array('Content-Type'=>'application/json'));
+        $reponsegenerale=$this->container->get('t360reponse.service')->getReponsesByEvaluation($idEval);
+
+        $reponseSup=$this->container->get('t360reponse.service')->getSuperieurResponsesByEvaluation($idEval);
+        $reponseSubordonne=$this->container->get('t360reponse.service')->getSubordoneeResponsesByEvaluation($idEval);
+        $reponseAuto=$this->container->get('t360reponse.service')->getAutoResponsesByEvaluation($idEval);
+        //Collegue not implemented ... waiting for further data.
+        //$reponseCollegue=$this->container->get('t360reponse.service')->getCollegueResponsesByEvaluation($idEval);
+
+        $reponse =array("reponseGenerale"=>$reponsegenerale,"reponseSubordonne"=>$reponseSubordonne,"reponseSup"=>$reponseSup,"reponseAuto"=>$reponseAuto);
+
+        for ($i = 0; $i < count($reponsegenerale); $i++) {
+            try{$reponsegenerale[$i]["reponseSubordonne"]=$reponseSubordonne[$i]['average'];}catch (\Exception $ex){}
+            try{$reponsegenerale[$i]["reponseSup"]=$reponseSup[$i]['average'];}catch (\Exception $ex){}
+            try{$reponsegenerale[$i]["reponseAuto"]=$reponseAuto[$i]['average'];}catch (\Exception $ex){}
+
+        }
+
+        $response =new Response($serializer->serialize($reponsegenerale,'json'));
+        //$response=new Response($serializer->serialize($reponse,'json'),200,array('Content-Type'=>'application/json'));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
