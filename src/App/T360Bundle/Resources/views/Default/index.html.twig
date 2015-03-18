@@ -203,12 +203,12 @@
                                $("#table-to-fill").append(' <div class="row">  ' +
                                '<div class="col-lg-4"><h5 class="text-center ">'+axis[compteur]+'</h5></div>'+
                                ' <div class="col-lg-1">' +
-                               '<h5 class="text-center ">'+ReponseCollegue[compteur]+'</h5></div>' +
+                               '<h5 class="text-center ">'+parseInt(ReponseCollegue[compteur])+'</h5></div>' +
                                '<div class="col-lg-2">' +
-                               '<h5 class="text-center">'+ReponseSup[compteur]+'</h5>' +
+                               '<h5 class="text-center">'+parseInt(ReponseSup[compteur])+'</h5>' +
                                '</div><div class="col-lg-1">' +
-                               '<h5 class="text-center">'+ReponseAuto[compteur]+'</h5></div>' +
-                               '<div class="col-lg-1"><h5 class="text-center">'+ReponseSub[compteur]+'</h5>' +
+                               '<h5 class="text-center">'+parseInt(ReponseAuto[compteur])+'</h5></div>' +
+                               '<div class="col-lg-1"><h5 class="text-center">'+parseInt(ReponseSub[compteur])+'</h5>' +
                                '</div>');
                                console.log(testVariable)
 
@@ -238,14 +238,15 @@
             </div>
         </div>
 
-        <div class="modal fade" id="datails-table-modal" tabindex="-1" role="dialog">
+        <div class="modal fade " id="datails-table-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3 class="modal-title">Tableau d'évaluation </h3>
                     </div>
-                    <div class="modal-body" id="table-to-fill">
+                    <div class="modal-body pre-scrollable" id="table-to-fill">
+
                         <div class="row">
                             <div class="col-lg-offset-4 col-lg-1">
                                 <h5 class="text-center text-blue">Co</h5>
@@ -276,7 +277,7 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-3"><p class="text-center ">Collegue</p></div>
-                            <div class="col-lg-3"><p class="text-center">Superieur hierarchique</p></div>
+                            <div class="col-lg-3"><p class="text-center">Sup hierarchique</p></div>
                             <div class="col-lg-3"><p class="text-center">Auto Evaluation</p></div>
                             <div class="col-lg-3"><p class="text-center">Subordonnée</p></div>
                         </div>

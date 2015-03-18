@@ -7,7 +7,7 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <td>{{ entity.idEvaluation }}</td>
             </tr>
             <tr>
                 <th>Datedebut</th>
@@ -27,7 +27,7 @@
         </a>
     </li>
     <li>
-        <a href="{{ path('t360evaluations_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('t360evaluations_edit', { 'id': entity.idEvaluation }) }}">
             Edit
         </a>
     </li>

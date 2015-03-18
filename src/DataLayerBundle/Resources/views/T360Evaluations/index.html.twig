@@ -15,16 +15,16 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('t360evaluations_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td><a href="{{ path('t360evaluations_show', { 'id': entity.idEvaluation }) }}">{{ entity.idEvaluation }}</a></td>
                 <td>{{ entity.dateDebut }}</td>
                 <td>{{ entity.dateFin }}</td>
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('t360evaluations_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('t360evaluations_show', { 'id': entity.idEvaluation }) }}">show</a>
                     </li>
                     <li>
-                        <a href="{{ path('t360evaluations_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('t360evaluations_edit', { 'id': entity.idEvaluation }) }}">edit</a>
                     </li>
                 </ul>
                 </td>

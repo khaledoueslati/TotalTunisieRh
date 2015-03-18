@@ -139,4 +139,8 @@ class Postes
     {
         return $this->idDirection;
     }
+
+    public function __toString(){
+        return $this->libelle;
+    }
 }

@@ -111,4 +111,8 @@ class T360Axes
     {
         return $this->idEval;
     }
+
+    public function __toString(){
+        return $this->libelle;
+    }
 }

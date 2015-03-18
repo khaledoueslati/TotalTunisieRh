@@ -3,6 +3,11 @@
 namespace DataLayerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DataLayerBundle\Entity\Postes;
+use DataLayerBundle\Entity\Directions;
+use DataLayerBundle\Entity\DirectionsPostes;
+
+
 
 /**
  * Employees
@@ -280,5 +285,9 @@ class Employees
     public function getSupHierarchique()
     {
         return $this->supHierarchique;
+    }
+
+    public function __toString(){
+        return $this->poste->getDirection()->getLibelle()." ".$this->poste->getPoste()->getLibelle()." ".$this->prenom." ".$this->nom;
     }
 }
