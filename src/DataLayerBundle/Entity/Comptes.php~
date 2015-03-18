@@ -1,0 +1,42 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Comptes
+ *
+ * @ORM\Table(name="comptes")
+ * @ORM\Entity
+ */
+class Comptes
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mdp", type="string", length=20, nullable=false)
+     */
+    private $mdp;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="identite_smartphone", type="string", length=60, nullable=false)
+     */
+    private $identiteSmartphone;
+
+    /**
+     * @var \Employees
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Employees")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cin", referencedColumnName="cin")
+     * })
+     */
+    private $cin;
+
+
+}

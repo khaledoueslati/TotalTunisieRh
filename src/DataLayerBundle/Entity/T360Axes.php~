@@ -1,0 +1,46 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * T360Axes
+ *
+ * @ORM\Table(name="t360_axes", uniqueConstraints={@ORM\UniqueConstraint(name="id_axes_UNIQUE", columns={"id"})})
+ * @ORM\Entity
+ */
+class T360Axes
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=45, nullable=true)
+     */
+    private $libelle;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="T360Evaluations", mappedBy="idAxe")
+     */
+    private $idEval;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idEval = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}

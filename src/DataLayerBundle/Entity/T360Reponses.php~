@@ -1,0 +1,62 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * T360Reponses
+ *
+ * @ORM\Table(name="t360_reponses", indexes={@ORM\Index(name="id_employee", columns={"id_employee"}), @ORM\Index(name="id_eval", columns={"id_eval"}), @ORM\Index(name="id_question", columns={"id_question"})})
+ * @ORM\Entity
+ */
+class T360Reponses
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="valeur", type="integer", nullable=false)
+     */
+    private $valeur;
+
+    /**
+     * @var \Employees
+     *
+     * @ORM\ManyToOne(targetEntity="Employees")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_employee", referencedColumnName="cin")
+     * })
+     */
+    private $idEmployee;
+
+    /**
+     * @var \T360Evaluations
+     *
+     * @ORM\ManyToOne(targetEntity="T360Evaluations")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_eval", referencedColumnName="id")
+     * })
+     */
+    private $idEval;
+
+    /**
+     * @var \T360Questions
+     *
+     * @ORM\ManyToOne(targetEntity="T360Questions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_question", referencedColumnName="id")
+     * })
+     */
+    private $idQuestion;
+
+
+}

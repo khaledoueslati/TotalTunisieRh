@@ -1,0 +1,36 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block body -%}
+    <h1>T360Evaluations</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.idEvaluation }}</td>
+            </tr>
+            <tr>
+                <th>Datedebut</th>
+                <td>{{ entity.dateDebut }}</td>
+            </tr>
+            <tr>
+                <th>Datefin</th>
+                <td>{{ entity.dateFin }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('t360evaluations') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('t360evaluations_edit', { 'id': entity.idEvaluation }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

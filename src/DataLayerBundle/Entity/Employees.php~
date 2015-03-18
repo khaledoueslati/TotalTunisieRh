@@ -1,0 +1,90 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Employees
+ *
+ * @ORM\Table(name="employees", indexes={@ORM\Index(name="sup_hierarchique_idx", columns={"sup_hierarchique"}), @ORM\Index(name="role_grh_idx", columns={"role"}), @ORM\Index(name="poste_employees_idx", columns={"poste"})})
+ * @ORM\Entity
+ */
+class Employees
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="cin", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $cin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=45, nullable=false)
+     */
+    private $nom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prenom", type="string", length=45, nullable=false)
+     */
+    private $prenom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=45, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="date_embauche", type="string", length=45, nullable=true)
+     */
+    private $dateEmbauche;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sexe", type="string", length=45, nullable=true)
+     */
+    private $sexe;
+
+    /**
+     * @var \DirectionsPostes
+     *
+     * @ORM\ManyToOne(targetEntity="DirectionsPostes")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="poste", referencedColumnName="id")
+     * })
+     */
+    private $poste;
+
+    /**
+     * @var \Roles
+     *
+     * @ORM\ManyToOne(targetEntity="Roles")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="role", referencedColumnName="id")
+     * })
+     */
+    private $role;
+
+    /**
+     * @var \Employees
+     *
+     * @ORM\ManyToOne(targetEntity="Employees")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sup_hierarchique", referencedColumnName="cin")
+     * })
+     */
+    private $supHierarchique;
+
+
+}

@@ -1,0 +1,46 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TsSessions
+ *
+ * @ORM\Table(name="ts_sessions")
+ * @ORM\Entity
+ */
+class TsSessions
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Annee", type="date", nullable=true)
+     */
+    private $annee;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Details_Supp", type="string", length=100, nullable=true)
+     */
+    private $detailsSupp;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="Nombre_magique", type="integer", nullable=true)
+     */
+    private $nombreMagique;
+
+
+}

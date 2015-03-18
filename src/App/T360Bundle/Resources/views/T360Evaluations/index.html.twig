@@ -1,0 +1,89 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block headerName %}
+    <h1>Liste des Evaluations 360</h1>
+{% endblock %}
+{% block body -%}
+
+
+   <div class="container">
+       <div class="row">
+           <div class="list-group">
+               <div class="list-group-item center-block text-center text-red">
+                   <div class="row">
+                       <div class="col-lg-2">
+                           <h4>Num Eval</h4>
+                       </div>
+                       <div class="col-lg-2">
+                           <h4>Date Debut</h4>
+                       </div>
+                       <div class="col-lg-2">
+                           <h4>Date Fin</h4>
+                       </div>
+
+                       <div class="col-lg-2">
+                           <h4>Evalué</h4>
+                       </div>
+                       <div class="col-lg-2">
+                           <h4>Poste</h4>
+                       </div>
+                       <div class="col-lg-2">
+                           <h4>Etat de l'évaluation</h4>
+                       </div>
+                   </div>
+               </div>
+
+               {% for entity in entities %}
+
+                   <a href="{{ path('get_results',{ 'idEval': entity.idEvaluation }) }}" class="list-group-item">
+                       <div class="row  center-block text-center">
+                           <div class="col-lg-2">
+                               <h5>{{ entity.idEvaluation }}</h5>
+                           </div>
+                           <div class="col-lg-2">
+                               <h5>{{ entity.dateDebut }}</h5>
+                           </div>
+                           <div class="col-lg-2">
+                               <h5>{{ entity.dateFin }}</h5>
+                           </div>
+
+                           <div class="col-lg-2">
+                               <h5>{{ entity.cinEvalue.nom|capitalize ~ " "~ entity.cinEvalue.prenom|capitalize }}</h5>
+                           </div>
+                           <div class="col-lg-2">
+                               <h5>{{ entity.cinEvalue.Poste.Poste }}</h5>
+                           </div>
+                           <div class="col-lg-2">
+                               <h5>Etat de l'évaluation</h5>
+                           </div>
+                       </div>
+                   </a>
+
+               {% endfor %}
+
+           </div>
+       </div>
+   </div>
+
+    <table class="records_list">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Datedebut</th>
+            <th>Datefin</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('t360evaluations_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

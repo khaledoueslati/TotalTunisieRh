@@ -1,0 +1,62 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TsReponses
+ *
+ * @ORM\Table(name="ts_reponses", indexes={@ORM\Index(name="fk_Reponses_Choix1_idx", columns={"Choix_idChoix"}), @ORM\Index(name="fk_Reponses_Questions1_idx", columns={"Questions_idQuestion"}), @ORM\Index(name="fk_TS_Reponses_TS_Jetons1_idx", columns={"TS_Jetons_idTS_Jeton"})})
+ * @ORM\Entity
+ */
+class TsReponses
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Date", type="string", length=10, nullable=true)
+     */
+    private $date;
+
+    /**
+     * @var \TsChoix
+     *
+     * @ORM\ManyToOne(targetEntity="TsChoix")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Choix_idChoix", referencedColumnName="id")
+     * })
+     */
+    private $choixchoix;
+
+    /**
+     * @var \TsQuestions
+     *
+     * @ORM\ManyToOne(targetEntity="TsQuestions")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Questions_idQuestion", referencedColumnName="id")
+     * })
+     */
+    private $questionsquestion;
+
+    /**
+     * @var \TsJetons
+     *
+     * @ORM\ManyToOne(targetEntity="TsJetons")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="TS_Jetons_idTS_Jeton", referencedColumnName="id")
+     * })
+     */
+    private $tsJetonstsJeton;
+
+
+}

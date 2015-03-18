@@ -1,0 +1,42 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TsQuestions
+ *
+ * @ORM\Table(name="ts_questions", indexes={@ORM\Index(name="fk_Questions_Thematiques_idx", columns={"Thematiques_idThematique"})})
+ * @ORM\Entity
+ */
+class TsQuestions
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Enonce", type="string", length=100, nullable=true)
+     */
+    private $enonce;
+
+    /**
+     * @var \TsThematiques
+     *
+     * @ORM\ManyToOne(targetEntity="TsThematiques")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Thematiques_idThematique", referencedColumnName="id")
+     * })
+     */
+    private $thematiquesthematique;
+
+
+}

@@ -1,0 +1,53 @@
+<?php
+
+namespace DataLayerBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Postes
+ *
+ * @ORM\Table(name="postes")
+ * @ORM\Entity
+ */
+class Postes
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=45, nullable=true)
+     */
+    private $libelle;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="niveau", type="integer", nullable=false)
+     */
+    private $niveau;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Directions", mappedBy="idPoste")
+     */
+    private $idDirection;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idDirection = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}
