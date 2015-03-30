@@ -18,10 +18,12 @@ class T360EvaluationsType extends AbstractType
             ->add('dateDebut')
             ->add('dateFin')
             ->add('cinEvalue')
-            ->add('idAxe')
+            ->add('idAxe','entity',array('class' => 'DataLayerBundle\Entity\T360Axes',"expanded"=>true,"multiple"=>true))
         ;
     }
-    
+
+
+
     /**
      * @param OptionsResolverInterface $resolver
      */

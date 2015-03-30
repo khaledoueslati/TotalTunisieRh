@@ -1,6 +1,7 @@
 <?php
 
 namespace App\T360Bundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -35,6 +36,7 @@ class T360ReponsesController extends Controller
             'entities' => $entities,
         );
     }
+
     /**
      * Creates a new T360Reponses entity.
      *
@@ -58,7 +60,7 @@ class T360ReponsesController extends Controller
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -91,11 +93,11 @@ class T360ReponsesController extends Controller
     public function newAction()
     {
         $entity = new T360Reponses();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -119,7 +121,7 @@ class T360ReponsesController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -145,8 +147,8 @@ class T360ReponsesController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -169,6 +171,7 @@ class T360ReponsesController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing T360Reponses entity.
      *
@@ -197,11 +200,12 @@ class T360ReponsesController extends Controller
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a T360Reponses entity.
      *
@@ -241,8 +245,7 @@ class T360ReponsesController extends Controller
             ->setAction($this->generateUrl('t360reponses_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-            ;
+            ->getForm();
     }
 
 
@@ -255,24 +258,33 @@ class T360ReponsesController extends Controller
 
         $serializer = $this->container->get('jms_serializer');
 
-        $reponsegenerale=$this->container->get('t360reponse.service')->getReponsesByEvaluation($idEval);
+        $reponsegenerale = $this->container->get('t360reponse.service')->getReponsesByEvaluation($idEval);
 
-        $reponseSup=$this->container->get('t360reponse.service')->getSuperieurResponsesByEvaluation($idEval);
-        $reponseSubordonne=$this->container->get('t360reponse.service')->getSubordoneeResponsesByEvaluation($idEval);
-        $reponseAuto=$this->container->get('t360reponse.service')->getAutoResponsesByEvaluation($idEval);
+        $reponseSup = $this->container->get('t360reponse.service')->getSuperieurResponsesByEvaluation($idEval);
+        $reponseSubordonne = $this->container->get('t360reponse.service')->getSubordoneeResponsesByEvaluation($idEval);
+        $reponseAuto = $this->container->get('t360reponse.service')->getAutoResponsesByEvaluation($idEval);
         //Collegue not implemented ... waiting for further data.
         //$reponseCollegue=$this->container->get('t360reponse.service')->getCollegueResponsesByEvaluation($idEval);
 
-        $reponse =array("reponseGenerale"=>$reponsegenerale,"reponseSubordonne"=>$reponseSubordonne,"reponseSup"=>$reponseSup,"reponseAuto"=>$reponseAuto);
+        $reponse = array("reponseGenerale" => $reponsegenerale, "reponseSubordonne" => $reponseSubordonne, "reponseSup" => $reponseSup, "reponseAuto" => $reponseAuto);
 
         for ($i = 0; $i < count($reponsegenerale); $i++) {
-            try{$reponsegenerale[$i]["reponseSubordonne"]=$reponseSubordonne[$i]['average'];}catch (\Exception $ex){}
-            try{$reponsegenerale[$i]["reponseSup"]=$reponseSup[$i]['average'];}catch (\Exception $ex){}
-            try{$reponsegenerale[$i]["reponseAuto"]=$reponseAuto[$i]['average'];}catch (\Exception $ex){}
+            try {
+                $reponsegenerale[$i]["reponseSubordonne"] = $reponseSubordonne[$i]['average'];
+            } catch (\Exception $ex) {
+            }
+            try {
+                $reponsegenerale[$i]["reponseSup"] = $reponseSup[$i]['average'];
+            } catch (\Exception $ex) {
+            }
+            try {
+                $reponsegenerale[$i]["reponseAuto"] = $reponseAuto[$i]['average'];
+            } catch (\Exception $ex) {
+            }
 
         }
 
-        $response =new Response($serializer->serialize($reponsegenerale,'json'));
+        $response = new Response($serializer->serialize($reponsegenerale, 'json'));
         //$response=new Response($serializer->serialize($reponse,'json'),200,array('Content-Type'=>'application/json'));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -284,6 +296,45 @@ class T360ReponsesController extends Controller
      */
     public function showResultsAction($idEval)
     {
-        return array("idEval"=>$idEval);
+        $reponsegenerale = $this->container->get('t360reponse.service')->getReponsesNumberByEval($idEval);
+        $all = $this->container->get('employee.service')->getNumberPersonToEvaluate($idEval);
+        return array("idEval" => $idEval, "nombreDeReponse" => $reponsegenerale, "allPersonToEvaluate" => $all);
+    }
+
+
+    /**
+     * @Route("/directions/service/results", name="get_directions_results_service")
+     *
+     */
+    public function getDirectionsResultAction()
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $reponsegenerale = $this->container->get('t360reponse.service')->getDirectionsResults();
+        $response = new Response($serializer->serialize($reponsegenerale, 'json'));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/directions/service/results/{id}", name="get_directions_results_service_by_id")
+     *
+     */
+    public function getDirectionsResultByIdAction($id)
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $reponsegenerale = $this->container->get('t360reponse.service')->getDirectionsResultsById($id);
+        $response = new Response($serializer->serialize($reponsegenerale, 'json'));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/directions/results", name="get_directions_results")
+     * @Template()
+     */
+    public function showDirectionsResultAction()
+    {
+        $directions = $this->get('directions.service')->getAll();
+        return array("directions"=>$directions);
     }
 }

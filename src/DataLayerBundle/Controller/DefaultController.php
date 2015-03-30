@@ -33,13 +33,15 @@ class DefaultController extends Controller
             //$evaluations_array=$this->get("t360evaluation.service")->getEvalToDiplay($cin);
             // if(sizeof($evaluations_array)!=0)
             //$JsonPerson = $serializer->serialize($evaluations_array, 'json');
-            $reponse=new T360Reponses();
-        $employee=new Employees();$employee->setNom("khaled");
-        $eval=new T360Evaluations();$eval->setDateDebut("55555");
-        $question=new T360Questions();$question->setEnonce("test");
-            $reponse->setIdEmployee($employee);$reponse->setIdEval($eval);$reponse->setIdQuestion($question);$reponse->setValeur(22);
+//            $reponse=new T360Reponses();
+//        $employee=new Employees();$employee->setNom("khaled");
+//        $eval=new T360Evaluations();$eval->setDateDebut("55555");
+//        $question=new T360Questions();$question->setEnonce("test");
+//            $reponse->setIdEmployee($employee);$reponse->setIdEval($eval);$reponse->setIdQuestion($question);$reponse->setValeur(22);
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('DataLayerBundle:Employees')->findAll();
 
-            $response =new Response($serializer->serialize($reponse,'json'));
+            $response =new Response($serializer->serialize($entities,'json'));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
 

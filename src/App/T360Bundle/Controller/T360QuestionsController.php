@@ -28,9 +28,20 @@ class T360QuestionsController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        echo("test ok !");
+
         $entities = $em->getRepository('DataLayerBundle:T360Questions')->findAll();
 
+        return array(
+            'entities' => $entities,
+        );
+    }
+
+    /**
+     * @Route("/axeid/{id}", name="t360questions_axeid")
+     * @Template("AppT360Bundle:T360Questions:index.html.twig")
+     */
+    public function indexByAxeAction($id){
+        $entities=$this->get("t360question.service")->getByAxe($id);
         return array(
             'entities' => $entities,
         );

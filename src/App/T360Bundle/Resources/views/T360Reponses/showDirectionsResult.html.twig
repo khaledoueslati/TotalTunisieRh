@@ -1,0 +1,282 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block body %}
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts-more.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/exporting.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/drilldown.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /*********************************Donnes generale ********************/
+            var axes = [];
+            var direction = [];
+            var valeurs = [];
+            var dataObj = [];
+            var directionsId = [];
+            /***********************************Donnes specifique aux directions*********************************/
+            var brandsData = [];
+            var drilldownData = [];
+            /***********************************appel AJAX*********************************/
+            $.ajax({
+                url: "{{ path('get_directions_results_service') }}"
+            }).then(function (data) {
+                console.log(data);
+                var oldDirection = "";
+
+                var temp = {
+                    name: '',
+                    data: []
+                };
+                for (var i = 0; i < data.length; i++) {
+                    axes.push(data[i].questionEnonce);
+
+                    if (oldDirection != data[i].directionLibelle) {
+                        if (temp.data.length > 0) {
+                            dataObj.push(temp);
+                        }
+                        temp = {
+                            name: '',
+                            data: []
+                        };
+                        temp.name = data[i].directionLibelle;
+                        oldDirection = data[i].directionLibelle;
+                        temp.data.push(parseFloat(data[i].moyenne));
+                        directionsId.push(parseInt(data[i].idDirection));
+                    } else {
+                        temp.data.push(parseFloat(data[i].moyenne));
+                    }
+
+                }
+                dataObj.push(temp);
+
+                /****************************Construction du graphe**********************************************/
+                $(function () {
+
+                    $('#all-directions').highcharts({
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: "Moyenne d'évaluation de tout les directions"
+                        },
+
+                        xAxis: {
+                            categories: axes,
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Rainfall (mm)'
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: dataObj
+                    });
+                });
+                console.log(directionsId);
+
+                /****************************construction des données de graphe dedié à chaque **********************************************/
+                var tempBrandsData = [];
+                var tempDrillDown = [];
+                var brandsDataObj = {
+                    drilldown: "",
+                    name: "",
+                    y: 0
+                };
+//                var idDirectionOld = 0;
+                var axeOld = "";
+                var drillDownObj = {data: [], id: "", name: ""};
+
+                for (var i = 0; i < directionsId.length; i++) {
+                    tempBrandsData=[];
+                    tempDrillDown=[];
+                    $.ajax({url: '/t360reponses/directions/service/results/' + directionsId[i]}).then(function (data) {
+                        var compteur = 0;
+                        var somme = 0;
+                        for (var j = 0; j < data.length; j++) {
+                            if (axeOld != data[j].axeLibelle) {
+                                if (brandsDataObj.drilldown != "" && drillDownObj.data.length != 0) {
+                                    if(compteur!=0){
+                                        brandsDataObj.y=somme/compteur;
+                                    }
+                                    tempBrandsData.push(brandsDataObj);
+                                    tempDrillDown.push(drillDownObj);
+
+                                    brandsDataObj = {
+                                        drilldown: "",
+                                        name: "",
+                                        y: 0
+                                    };
+                                    drillDownObj = {id: "", name: "", data: []};
+                                }
+                                drillDownObj.id = data[j].axeLibelle;
+                                drillDownObj.name = data[j].axeLibelle;
+                                drillDownObj.data.push([data[j].questionEnonce,parseFloat(data[j].moyenne)]);
+
+                                brandsDataObj.name=data[j].axeLibelle;
+                                brandsDataObj.drilldown=data[j].axeLibelle;
+
+                                somme = parseFloat(data[j].moyenne);
+                                compteur = 1;
+                                axeOld=data[j].axeLibelle;
+                            }else {
+                                drillDownObj.data.push([data[j].questionEnonce,parseFloat(data[j].moyenne)]);
+                                somme+=parseFloat(data[j].moyenne);
+                                compteur++;
+                            }
+                        }
+                        if(compteur!=0){
+                            brandsDataObj.y=somme/compteur;
+                        }
+                        tempBrandsData.push(brandsDataObj);
+                        tempDrillDown.push(drillDownObj);
+
+                    });
+
+                    //affectation temp drilldown and brand data => big tableau
+
+                    drilldownData.push(tempDrillDown);
+                    brandsData.push(tempBrandsData);
+
+                }
+
+
+            });
+
+            /****************************Gestion de click pour les nav tabs **********************************************/
+            $('.clickable').click(function () {
+                console.log(brandsData[0]);
+                console.log(drilldownData[0]);
+                Highcharts.setOptions({
+                    lang: {
+                        drillUpText: '◁ {series.name}'
+                    }
+                });
+                $('#drill-douwn-chart').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: "Moyenne d'évaluation"
+                    },
+                    subtitle: {
+                        text: 'Direction DRHA'
+                    },
+                    xAxis: {
+                        type: 'category'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.y:.1f}'
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                    },
+
+                    series: [{
+                        name: 'Axes d\'évaluations',
+                        colorByPoint: true,
+                        data: brandsData[0]
+                    }],
+                    drilldown: {
+                        series: drilldownData[0]
+                    }
+                });
+
+                $('#pie-chart').highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: " Pourcentage d'ecart des évaluations"
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Browser share',
+                        data: [
+                            ['Rouge',   28.2],
+                            ['Jaune',       26.8],
+                            ['Vert',   45.0]
+                        ]
+                    }]
+                });
+            })
+        });
+
+    </script>
+    <br/>
+    <div class="container-fluid"><!-- directions tab -->
+        <div class="box">
+            <ul class="nav nav-pills nav-justified ">
+                {% for direction in directions %}
+                    <li><a href="#chart-section" class="clickable" data-id="{{ direction.idDirection }}"
+                           data-toggle="tab">{{ direction.libelle }}</a></li>
+                {% endfor %}
+
+            </ul>
+
+            <div class="tab-content">
+                <div id="chart-section" >
+                    <div class="col-lg-12">
+                        <p>
+                        <div class="col-lg-8" id="drill-douwn-chart"></div>
+
+                        <div id="pie-chart" class="col-lg-4"></div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid">
+        <div id="all-directions">
+        </div>
+
+    </div>
+{% endblock %}

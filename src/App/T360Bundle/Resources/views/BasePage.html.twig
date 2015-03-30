@@ -72,7 +72,7 @@
                         <!-- The user image in the navbar-->
                         <img src="{{ asset('bundles/AppT360/images/avatar1.jpg') }}" class="user-image" alt="User Image"/>
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">Alexander Pierce</span>
+                        <span class="hidden-xs">{{ app.user.nom }}  {{ app.user.prenom }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
@@ -80,7 +80,7 @@
                             <img src="{{ asset('bundles/AppT360/images/avatar1.jpg') }}" class="img-circle" alt="User Image"/>
 
                             <p>
-                                Alexander Pierce - Web Developer
+                                {{ app.user.nom }} - {{ app.user.prenom }}- {{ app.user.poste.direction }} - {{ app.user.poste.poste }}
                                 <small>Member since Nov. 2012</small>
                             </p>
                         </li>
@@ -102,7 +102,7 @@
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                <a href="{{ path('logout') }}" class="btn btn-default btn-flat">Sign out</a>
                             </div>
                         </li>
                     </ul>
@@ -123,7 +123,7 @@
                 <img src="{{ asset('bundles/AppT360/images/avatar1.jpg') }}" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p>Alexander Pierce</p>
+                <p>{{ app.user.nom }} - {{ app.user.prenom }}</p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -145,13 +145,16 @@
         <ul class="sidebar-menu">
             <li class="header">HEADER</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><span>Evaluations</span></a><</li>
+            <li class="active"><a href="{{ path("t360evaluations") }}"><span>Evaluations</span></a><</li>
             <li><a href="#"><span>Another Link</span></a></li>
             <li class="treeview">
-                <a href="#"><span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <a href="#"><span>Gestion Evaluations 360°</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
-                    <li><a href="#">Link in level 2</a></li>
-                    <li><a href="#">Link in level 2</a></li>
+                    <li><a href="#">Listes des Evaluations</a></li>
+                    <li><a href="#"  data-toggle="modal" data-target="#new-eval-modal">Ajouter une évaluations</a></li>
+                    <li><a href="{{ path('t360axes') }}">Gestion des Axes d'évaluation</a></li>
+                    <li><a href="{{ path('get_directions_results') }}">Resultats d'évaluations par direction</a></li>
+                    <li><a href="#">Résultats d'évaluation par personnes</a></li>
                 </ul>
             </li>
         </ul>
@@ -180,6 +183,26 @@
         {% endblock %}
 
     </section>
+
+
+    <div class="modal fade " id="new-eval-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajout d'une nouvelle evaluation </h3>
+                </div>
+                <div class="modal-body" id="form-add">
+                    {{  render(controller('AppT360Bundle:T360Evaluations:new'))}}
+
+
+                </div>
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->

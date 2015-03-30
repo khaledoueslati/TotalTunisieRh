@@ -15,7 +15,7 @@
         var ReponseSup = [];
         var ReponseAuto = [];
         var ReponseCollegue = [];
-        var table_data=[];
+        var table_data = [];
 
         $.ajax({
             url: "{{ path('get_reponses_by_eval',{ 'idEval': idEval }) }}"
@@ -41,8 +41,7 @@
                     axis.push(data[i].enonce)
                 }
 
-            }
-            ;
+            };
             $(function () {
 
                 $('#containerSpider').highcharts({
@@ -57,7 +56,7 @@
 
                     //      colors: ['#FF0000', '#434348', '#90ed7d'],
                     title: {
-                        text: 'Synthese evaluation 360'
+                        text: 'Synthèse évaluation 360'
 
                     },
 
@@ -107,7 +106,9 @@
 
                 });
                 $('#containerLine').highcharts({
-
+                    title: {
+                        text: 'Synthèse évaluation 360'
+                    },
                     xAxis: {
                         categories: axis
                     },
@@ -121,9 +122,7 @@
                             color: '#808080'
                         }]
                     },
-                    exporting: {
-                        enabled: false
-                    },
+
                     credits: {
                         enabled: false
                     },
@@ -155,60 +154,60 @@
         // chargement des données dans le tableau de details
 
 
-
         $("#detailsTable").click(function () {
-            if(table_data.length==0){
+            if (table_data.length == 0) {
                 $.ajax({
                     url: "{{ path('questions_per_axes') }}"
                 }).then(function (data) {
-                    table_data=data;
+                    table_data = data;
                     console.log("data charged ! ");
                     console.log(data);
                     //essai d'un seul axe
-                    var i=0;var offset=0;
-                    var compteur=0;
-                    for(var j=0; j<data.length;j++){
-                        var sommeAuto=0;
-                        var sommeSub=0;
-                        var sommeSup=0;
-                        var sommeCollegue=0;
-                        console.log("***********j="+j);
-                        var testVariable=parseInt(data[j].QuestionCount)+offset;
+                    var i = 0;
+                    var offset = 0;
+                    var compteur = 0;
+                    for (var j = 0; j < data.length; j++) {
+                        var sommeAuto = 0;
+                        var sommeSub = 0;
+                        var sommeSup = 0;
+                        var sommeCollegue = 0;
+                        console.log("***********j=" + j);
+                        var testVariable = parseInt(data[j].QuestionCount) + offset;
                         console.log(testVariable);
-                        for(i;i<testVariable;i++){
-                            console.log("i="+i);
-                            sommeAuto+=ReponseAuto[i];
-                            sommeSub+=ReponseSub[i];
-                            sommeCollegue+=ReponseCollegue[i];
-                            sommeSup+=ReponseSup[i];
+                        for (i; i < testVariable; i++) {
+                            console.log("i=" + i);
+                            sommeAuto += ReponseAuto[i];
+                            sommeSub += ReponseSub[i];
+                            sommeCollegue += ReponseCollegue[i];
+                            sommeSup += ReponseSup[i];
                         }
-                        offset=i;
-                        console.log("auto : "+sommeAuto+" Collegue :"+sommeCollegue+" subordonée : "+sommeSub+" superieur : "+sommeSup );
-                        var moyenne=(sommeAuto+sommeCollegue+sommeSub+sommeSup)/4;
+                        offset = i;
+                        console.log("auto : " + sommeAuto + " Collegue :" + sommeCollegue + " subordonée : " + sommeSub + " superieur : " + sommeSup);
+                        var moyenne = (sommeAuto + sommeCollegue + sommeSub + sommeSup) / 4;
                         $("#table-to-fill").append(' <div class="row bg-info">  ' +
-                        '<div class="col-lg-4"><h5 class="text-center ">'+data[j].libelle+'</h5></div>'+
+                        '<div class="col-lg-4"><h5 class="text-center ">' + data[j].libelle + '</h5></div>' +
                         ' <div class="col-lg-1">' +
-                        '<h5 class="text-center ">'+sommeCollegue+'</h5></div>' +
+                        '<h5 class="text-center ">' + sommeCollegue + '</h5></div>' +
                         '<div class="col-lg-2">' +
-                        '<h5 class="text-center">'+sommeSup+'</h5>' +
+                        '<h5 class="text-center">' + sommeSup + '</h5>' +
                         '</div><div class="col-lg-1">' +
-                        '<h5 class="text-center">'+sommeAuto+'</h5></div>' +
-                        '<div class="col-lg-1"><h5 class="text-center">'+sommeSub+'</h5>' +
+                        '<h5 class="text-center">' + sommeAuto + '</h5></div>' +
+                        '<div class="col-lg-1"><h5 class="text-center">' + sommeSub + '</h5>' +
                         '</div><div class="col-lg-1">' +
-                        '<h5 class="text-center">'+moyenne+'</h5></div>' +
-                        '<div class="col-lg-1"><h5 class="text-center">'+Math.abs(moyenne-sommeAuto)+'</h5>' +
+                        '<h5 class="text-center">' + moyenne + '</h5></div>' +
+                        '<div class="col-lg-1"><h5 class="text-center">' + Math.abs(moyenne - sommeAuto) + '</h5>' +
                         ' </div>');
 
-                        for(compteur;compteur<testVariable;compteur++){
+                        for (compteur; compteur < testVariable; compteur++) {
                             $("#table-to-fill").append(' <div class="row">  ' +
-                            '<div class="col-lg-4"><h5 class="text-center ">'+axis[compteur]+'</h5></div>'+
+                            '<div class="col-lg-4"><h5 class="text-center ">' + axis[compteur] + '</h5></div>' +
                             ' <div class="col-lg-1">' +
-                            '<h5 class="text-center ">'+parseInt(ReponseCollegue[compteur])+'</h5></div>' +
+                            '<h5 class="text-center ">' + parseInt(ReponseCollegue[compteur]) + '</h5></div>' +
                             '<div class="col-lg-2">' +
-                            '<h5 class="text-center">'+parseInt(ReponseSup[compteur])+'</h5>' +
+                            '<h5 class="text-center">' + parseInt(ReponseSup[compteur]) + '</h5>' +
                             '</div><div class="col-lg-1">' +
-                            '<h5 class="text-center">'+parseInt(ReponseAuto[compteur])+'</h5></div>' +
-                            '<div class="col-lg-1"><h5 class="text-center">'+parseInt(ReponseSub[compteur])+'</h5>' +
+                            '<h5 class="text-center">' + parseInt(ReponseAuto[compteur]) + '</h5></div>' +
+                            '<div class="col-lg-1"><h5 class="text-center">' + parseInt(ReponseSub[compteur]) + '</h5>' +
                             '</div>');
                             console.log(testVariable)
 
@@ -224,13 +223,21 @@
 
     <section class="container"> <!-- upContent Container -->
         <div class="row">
-            <div id="detailsTable" class="col-md-4 col-sm-6 col-xs-12 " data-toggle="modal" data-target="#datails-table-modal">
+            <div id="detailsTable" class="col-md-4 col-sm-6 col-xs-12 " data-toggle="modal"
+                 data-target="#datails-table-modal">
                 <div class="info-box hvr-grow">
                     <span class="info-box-icon bg-red"><i class="fa fa-expand top-buffer"></i></span>
 
                     <div class="info-box-content">
                         <span class="info-box-text">Tableau d'evaluation</span>
-                        <span class="info-box-number">Mr Alexander</span>
+
+                        <div class="col-md-12 top-buffer-x10">
+
+                            <div class="progress">
+                                <div class="progress-bar bg-red " style="width: {{ (nombreDeReponse / allPersonToEvaluate)*100 }}%"></div>
+                            </div>
+                            <span class="progress-number pull-right"><b>{{ nombreDeReponse }}</b>/{{ allPersonToEvaluate }}</span>
+                        </div>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -290,6 +297,7 @@
     <div class="row">
         <div class="col-lg-5"><!--  spider schema -->
             <div id="containerSpider" class="box box-body box-danger"></div>
+
         </div>
         <!-- /spider schema -->
 

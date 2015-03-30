@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DataLayerBundle\Entity\Postes;
 use DataLayerBundle\Entity\Directions;
 use DataLayerBundle\Entity\DirectionsPostes;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
@@ -15,7 +15,7 @@ use DataLayerBundle\Entity\DirectionsPostes;
  * @ORM\Table(name="employees", indexes={@ORM\Index(name="sup_hierarchique_idx", columns={"sup_hierarchique"}), @ORM\Index(name="role_grh_idx", columns={"role"}), @ORM\Index(name="poste_employees_idx", columns={"poste"})})
  * @ORM\Entity
  */
-class Employees
+class Employees implements UserInterface
 {
     /**
      * @var integer
@@ -90,6 +90,29 @@ class Employees
      * })
      */
     private $supHierarchique;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=45, nullable=false)
+     */
+    private $password;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="identite_smartphone", type="string", length=45, nullable=false)
+     */
+    private $identiteSmartphone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=45, nullable=false)
+     */
+    private $username;
+
 
 
 
@@ -285,6 +308,92 @@ class Employees
     public function getSupHierarchique()
     {
         return $this->supHierarchique;
+    }
+
+    /**
+     * Get identitesmartphone
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $password
+     * @return Employees
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getIdentiteSmartPhone()
+    {
+        return $this->identiteSmartphone;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $identiteSmartphone
+     * @return Employees
+     */
+    public function setIdentiteSmartPhone($identiteSmartphone)
+    {
+        $this->identiteSmartphone = $identiteSmartphone;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return Employees
+     */
+    public function setUserName($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+
+    public function getSalt()
+    {
+
+    }
+
+
+    public function eraseCredentials()
+    {
+    }
+
+
+    public function getRoles()
+    {
+        return array($this->role->getLibelle());
     }
 
     public function __toString(){

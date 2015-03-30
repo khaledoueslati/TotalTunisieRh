@@ -208,7 +208,7 @@ class T360AxesController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360axes_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('t360axes', array('id' => $id)));
         }
 
         return array(
@@ -255,7 +255,7 @@ class T360AxesController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('t360axes_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Delete Axe','attr'=>array("class"=>"btn btn-warning pull-right")))
             ->getForm()
             ;
     }

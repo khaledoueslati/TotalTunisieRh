@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new DataLayerBundle\DataLayerBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new App\T360Bundle\AppT360Bundle(),
+            new OCUserBundle\OCUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -3,6 +3,8 @@ parameters:
     t360evaluationServiceclass: DataLayerBundle\Managers\GestionT360Evaluation
     t360questionsServiceclass: DataLayerBundle\Managers\GestionT360Questions
     t360reponseServiceclass: DataLayerBundle\Managers\GestionT360Reponses
+    employeeServiceclass: DataLayerBundle\Managers\GestionEmployee
+    directionsServiceclass: DataLayerBundle\Managers\GestionDirections
 
 services:
     employee.service:
@@ -20,3 +22,11 @@ services:
     t360reponse.service:
             class: "%t360reponseServiceclass%"
             arguments: ["@doctrine.orm.entity_manager"]
+
+    employee.service:
+            class: "%employeeServiceclass%"
+            arguments: ["@doctrine.orm.entity_manager"]
+
+    directions.service:
+                class: "%directionsServiceclass%"
+                arguments: ["@doctrine.orm.entity_manager"]

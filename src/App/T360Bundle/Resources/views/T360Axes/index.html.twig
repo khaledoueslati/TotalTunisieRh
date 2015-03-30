@@ -1,41 +1,149 @@
-{% extends '::base.html.twig' %}
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
 
+
+
+{% block headerName %}
+    <h1>Liste des axes d'évaluations 360°</h1>
+{% endblock %}
 {% block body -%}
-    <h1>T360Axes list</h1>
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Libelle</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('t360axes_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.libelle }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('t360axes_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('t360axes_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('t360axes_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <div class="col-lg-4 box-title">
+                            <h6 class="box-title"><strong>N° Axe</strong></h6>
+                        </div>
+                        <div class="col-lg-4 box-title">
+                            <h6 class="box-title"><strong>Libelle</strong></h6>
+                        </div>
+                        <button class="btn btn-box-tool pull-right bg-red" data-original-title="Ajouter axe" title data-toggle="modal" data-target="#new-axe-modal">
+                            <i class="fa fa-plus"></i>
+                        </button>
+
+                    </div>
+                    <div class="box-body">
+                        <div class="list-group">
+                            {% for entity in entities %}
+                                <a class="list-group-item to-show" data-libelle="{{ entity.libelle }}" data-questions="{{ path("t360questions_axeid",{ 'id': entity.id }) }}" data-href="{{ path("t360axes_edit",{ 'id': entity.id }) }}" href="#">
+                                    <div class="row">
+                                        <div class="col-lg-4 top-buffer-x2"><span class="badge">{{ entity.id }}</span>
+                                        </div>
+                                        <div class="col-lg-4"><h5>{{ entity.libelle }}</h5></div>
+                                    </div>
+
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="row">
+                    <!-- questions box -->
+                    <div id="questions" class="box box-danger" hidden="hidden">
+                        <div class="box-header">
+                            <h3 class="box-title"><strong>Liste des questions</strong></h3>
+                            <p class="add-class text-red"></p>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="question-list" class="box-body">
+
+                        </div>
+                        <!-- Loading (remove the following to stop the loading)-->
+                        <div class="overlay" id="loading-state-questions">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- end loading -->
+                    </div>
+                    <!-- /questions box -->
+
+                    <div id="axe-edit" class="box box-danger collapsed-box" hidden="hidden">
+                        <div class="box-header">
+                            <h3 class="box-title"><strong>Edit Axe</strong></h3>
+                            <p class="add-class text-red"></p>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body" id="edit-axe-body">
+
+                        </div>
+                        <!-- /.box-body -->
+                        <!-- Loading (remove the following to stop the loading)-->
+                        <div class="overlay" id="loading-state">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                        <!-- end loading -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-3">
+
+    </div><!-- /.col -->
+
+
+
+
+
+    <div class="modal fade " id="new-axe-modal" tabindex="-1" role="dialog"><!-- div modal pour ajout d'axe -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajout d'une nouvelle evaluation </h3>
+                </div>
+                <div class="modal-body" id="form-add">
+                    {{ render(controller('AppT360Bundle:T360Axes:new')) }}
+                </div>
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var oldUrl="";
+        $(".to-show").click(function () {
+
+            var url = $(this).attr("data-href");
+            var id = $(this).attr("data-questions");
+            var libelle= $(this).attr("data-libelle");
+           if(url!=oldUrl){
+               oldUrl=url;
+               /*****************Liste des Question************************/
+               $("#questions").show("slide");
+               $("#loading-state-questions").show();
+               $.ajax({url: id}).then(function (data) {
+                   $("#question-list").html(data);
+                   $("#loading-state-questions").hide();
+               });
+               /******************Form Edit Axes***********************/
+               $("#loading-state").show();
+               $("#axe-edit").show("slide");
+
+               $.ajax({url: url}).then(function (data) {
+                   $("#edit-axe-body").html(data);
+                   $("#loading-state").hide();
+
+               });
+
+               $(".add-class").html(libelle);
+           }
+        })
+
+    </script>
+{% endblock %}

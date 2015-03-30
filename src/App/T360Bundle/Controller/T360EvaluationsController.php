@@ -166,6 +166,18 @@ class T360EvaluationsController extends Controller
             'method' => 'PUT',
         ));
 
+
+//        $form = $this->createFormBuilder($entity)
+//            ->add('idEvaluation','integer',array('read_only' =>'true'))
+//            ->add('dateDebut', 'text',array('read_only' =>'true'))
+//            ->add("dateFin",'text')
+//            ->add("cinEvalue",'DataLayerBundle\Entity\Employees')
+//            ->add('idAxes','choice')
+//            ->setMethod('PUT')
+//            ->setAction($this->generateUrl('t360axes_update', array('id' => $entity->getIdEvaluation())))
+//            ->getForm();
+//
+//        $form->add('submit', 'submit', array('label' => 'Update'));
         $form->add('submit', 'submit', array('label' => 'Update'));
 
         return $form;
@@ -194,7 +206,7 @@ class T360EvaluationsController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360evaluations_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('t360evaluations'));
         }
 
         return array(

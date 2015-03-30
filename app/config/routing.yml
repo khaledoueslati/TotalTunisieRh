@@ -8,5 +8,17 @@ data_layer:
     type:     annotation
     prefix:   /
 
+# app/config/routing.yml
 
+# ...
+
+login:
+    pattern:   /login
+    defaults:  { _controller: OCUserBundle:Security:login }
+
+login_check:
+    pattern:   /login_check
+
+logout:
+    pattern:   /logout
 

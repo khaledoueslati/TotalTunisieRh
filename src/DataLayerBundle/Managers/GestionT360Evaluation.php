@@ -80,9 +80,8 @@ class GestionT360Evaluation {
                                                         " );
 
         }
-
-
         return $query->getResult();
 
     }
+
 } 

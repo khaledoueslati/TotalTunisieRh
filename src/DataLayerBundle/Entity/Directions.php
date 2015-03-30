@@ -117,4 +117,9 @@ class Directions
     {
         return $this->idPoste;
     }
+
+    public function __toString()
+    {
+        return $this->libelle;
+    }
 }

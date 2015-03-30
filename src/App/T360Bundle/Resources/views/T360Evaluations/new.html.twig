@@ -1,15 +1,9 @@
-{% extends 'AppT360Bundle::BasePage.html.twig' %}
+{% extends 'AppT360Bundle::BaseformPage.html.twig' %}
 
 {% block body -%}
-    <h1>T360Evaluations creation</h1>
 
-    {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('t360evaluations') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+        {{ form(form) }}
+
+
 {% endblock %}

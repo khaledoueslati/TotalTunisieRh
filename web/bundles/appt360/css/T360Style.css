@@ -1,5 +1,9 @@
 .top-buffer { margin-top:20%; }
+.top-buffer-x10 { margin-top:10%; }
+.top-buffer-x2 { margin-top:2%; }
+
+.bottom-buffer  { margin-top: -3%;}
 .hover-effect-red:hover{
     cursor: pointer;
-
 }
+

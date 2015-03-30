@@ -5,85 +5,101 @@
 {% endblock %}
 {% block body -%}
 
+    <div class="container">
+        <div class="row ">
+            <div class="col-lg-2">
+                <button class="btn btn-default" id="btn-add-eval" data-toggle="modal" data-target="#new-eval-modal"> Add
+                    Evaluation
+                </button>
+            </div>
+        </div>
 
-   <div class="container">
-       <div class="row">
-           <div class="list-group">
-               <div class="list-group-item center-block text-center text-red">
-                   <div class="row">
-                       <div class="col-lg-2">
-                           <h4>Num Eval</h4>
-                       </div>
-                       <div class="col-lg-2">
-                           <h4>Date Debut</h4>
-                       </div>
-                       <div class="col-lg-2">
-                           <h4>Date Fin</h4>
-                       </div>
+        <div class="panel panel-default box box-body box-danger">
+            <table class="table table-hover table-bordered text-center">
+                <thead>
+                <tr>
+                    <td class="col-lg-1"><h5><strong>Poste</strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Date Debut</strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Date Fin</strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Evalué</strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Poste</strong></h5></td>
+                </tr>
+                </thead>
+                <tbody >
 
-                       <div class="col-lg-2">
-                           <h4>Evalué</h4>
-                       </div>
-                       <div class="col-lg-2">
-                           <h4>Poste</h4>
-                       </div>
-                       <div class="col-lg-2">
-                           <h4>Etat de l'évaluation</h4>
-                       </div>
-                   </div>
-               </div>
+                {% for entity in entities %}
+                    <tr>
+                        <td class="col-lg-1">
+                            <h5><span class="badge">{{ entity.idEvaluation }}</span></h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.dateDebut }}</h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.dateFin }}</h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.cinEvalue.nom|capitalize ~ " "~ entity.cinEvalue.prenom|capitalize }}</h5></td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.cinEvalue.Poste.Direction ~ " "~ entity.cinEvalue.Poste.Poste }}</h5>
+                        </td>
+                        <td class="col-lg-3">
 
-               {% for entity in entities %}
+                                <a href="{{ path('get_results',{ 'idEval': entity.idEvaluation }) }}" class="btn btn-primary hvr-grow"><span class="fa fa-line-chart">&nbsp; Resultats</span></a>
+                                <a data-toggle="modal" id="{{ path('t360evaluations_edit',{ 'id': entity.idEvaluation }) }}" data-target="#edit-eval-modal"  class="btn btn-box-tool hvr-grow click_class"><span class="fa fa-edit">&nbsp; Edit</span></a>
 
-                   <a href="{{ path('get_results',{ 'idEval': entity.idEvaluation }) }}" class="list-group-item">
-                       <div class="row  center-block text-center">
-                           <div class="col-lg-2">
-                               <h5>{{ entity.idEvaluation }}</h5>
-                           </div>
-                           <div class="col-lg-2">
-                               <h5>{{ entity.dateDebut }}</h5>
-                           </div>
-                           <div class="col-lg-2">
-                               <h5>{{ entity.dateFin }}</h5>
-                           </div>
 
-                           <div class="col-lg-2">
-                               <h5>{{ entity.cinEvalue.nom|capitalize ~ " "~ entity.cinEvalue.prenom|capitalize }}</h5>
-                           </div>
-                           <div class="col-lg-2">
-                               <h5>{{ entity.cinEvalue.Poste.Poste }}</h5>
-                           </div>
-                           <div class="col-lg-2">
-                               <h5>Etat de l'évaluation</h5>
-                           </div>
-                       </div>
-                   </a>
+                        </td>
 
-               {% endfor %}
+                    </tr>
 
-           </div>
-       </div>
-   </div>
 
-    <table class="records_list">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Datedebut</th>
-            <th>Datefin</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
+                {% endfor %}
 
-        </tbody>
-    </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('t360evaluations_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </div>
+    </div>
+    </div>
+
+    <div class="modal fade " id="edit-eval-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Evaluation</h3>
+                    <div class="modal-body" id="form-edit">
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+
+    $(document).ready(function () {
+        $(".click_class").click(function () {
+            var url=$(this).attr('id');
+            console.log(url);
+            $.ajax({url : url}).then(function (data) {
+                console.log(data);
+                $("#form-edit").html(data);
+            });
+        });
+    });
+</script>
+
+
+
+
+{% endblock %}
