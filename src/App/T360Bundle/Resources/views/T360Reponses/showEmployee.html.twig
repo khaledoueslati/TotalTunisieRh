@@ -6,23 +6,17 @@
 {% block body -%}
 
     <div class="container">
-        <div class="row ">
-            <div class="col-lg-2">
-                <button class="btn btn-default" id="btn-add-eval" data-toggle="modal" data-target="#new-eval-modal"> Add
-                    Evaluation
-                </button>
-            </div>
-        </div>
+        <br/>
 
         <div class="panel panel-default box box-body box-danger">
             <table class="table table-hover table-bordered text-center">
                 <thead>
                 <tr>
-                    <td class="col-lg-1"><h5><strong>#</strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Date Debut</strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Date Fin</strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Evalué</strong></h5></td>
+                    <td class="col-lg-1"><h5><strong>CIN</strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Nom </strong></h5></td>
+                    <td class="col-lg-2"><h5><strong>Prenom</strong></h5></td>
                     <td class="col-lg-2"><h5><strong>Poste</strong></h5></td>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -30,28 +24,24 @@
                 {% for entity in entities %}
                     <tr>
                         <td class="col-lg-1">
-                            <h5><span class="badge">{{ entity.idEvaluation }}</span></h5>
+                            <h5><span class="badge">{{ entity.cin }}</span></h5>
                         </td>
                         <td class="col-lg-2">
-                            <h5>{{ entity.dateDebut|date('Y-m-d') }}</h5>
+                            <h5>{{ entity.nom }}</h5>
                         </td>
                         <td class="col-lg-2">
-                            <h5>{{ entity.dateFin|date('Y-m-d') }}</h5>
+                            <h5>{{ entity.prenom }}</h5>
                         </td>
+
                         <td class="col-lg-2">
-                            <h5>{{ entity.cinEvalue.nom|capitalize ~ " "~ entity.cinEvalue.prenom|capitalize }}</h5>
-                        </td>
-                        <td class="col-lg-2">
-                            <h5>{{ entity.cinEvalue.Poste.Poste ~ " "~ entity.cinEvalue.Poste.Direction }}</h5>
+                            <h5>{{ entity.Poste.Direction ~ " "~ entity.Poste.Poste }}</h5>
                         </td>
                         <td class="col-lg-3">
 
-                            <a href="{{ path('get_results',{ 'idEval': entity.idEvaluation }) }}"
+                            <a href="{{ path('get_historique_results',{ 'cin': entity.cin }) }}"
                                class="btn btn-primary hvr-grow"><span
                                         class="fa fa-line-chart">&nbsp; Resultats</span></a>
-                            <a data-toggle="modal" id="{{ path('t360evaluations_edit',{ 'id': entity.idEvaluation }) }}"
-                               data-target="#edit-eval-modal" class="btn btn-box-tool hvr-grow click_class"><span
-                                        class="fa fa-edit">&nbsp; Edit</span></a>
+
 
 
                         </td>

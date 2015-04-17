@@ -3,6 +3,8 @@
 namespace DataLayerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * T360Evaluations
@@ -22,16 +24,20 @@ class T360Evaluations
     private $idEvaluation;
 
     /**
-     * @var string
+     * @var date
      *
-     * @ORM\Column(name="date_debut", type="string", length=45, nullable=false)
+     * @ORM\Column(name="date_debut", type="date", length=45, nullable=false)
+     * @Type("DateTime<'Y-m-d'>")
+     * @Assert\NotNull
      */
     private $dateDebut;
 
     /**
-     * @var string
+     * @var date
      *
-     * @ORM\Column(name="date_fin", type="string", length=45, nullable=true)
+     * @ORM\Column(name="date_fin", type="date", length=45, nullable=true)
+     * @Type("DateTime<'Y-m-d'>")
+     * @Assert\NotNull
      */
     private $dateFin;
 
@@ -42,6 +48,7 @@ class T360Evaluations
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="cin_evalue", referencedColumnName="cin")
      * })
+     * @Assert\NotNull
      */
     private $cinEvalue;
 
@@ -57,6 +64,7 @@ class T360Evaluations
      *     @ORM\JoinColumn(name="id_axe", referencedColumnName="id")
      *   }
      * )
+     * @Assert\NotNull
      */
     private $idAxe;
 
@@ -82,7 +90,7 @@ class T360Evaluations
     /**
      * Set dateDebut
      *
-     * @param string $dateDebut
+     * @param date $dateDebut
      * @return T360Evaluations
      */
     public function setDateDebut($dateDebut)
@@ -95,7 +103,7 @@ class T360Evaluations
     /**
      * Get dateDebut
      *
-     * @return string 
+     * @return DateTime
      */
     public function getDateDebut()
     {
@@ -105,7 +113,7 @@ class T360Evaluations
     /**
      * Set dateFin
      *
-     * @param string $dateFin
+     * @param date $dateFin
      * @return T360Evaluations
      */
     public function setDateFin($dateFin)

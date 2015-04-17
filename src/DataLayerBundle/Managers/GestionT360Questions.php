@@ -24,6 +24,17 @@ class GestionT360Questions {
         return $this->EntityManager->getRepository($this->rep)->find($id);
     }
 
+    public function deleteQuestion($id){
+
+        $entity = $this->EntityManager->getRepository($this->rep)->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find T360Questions entity.');
+        }
+
+        $this->EntityManager->remove($entity);
+        $this->EntityManager->flush();
+    }
     public function getByAxe($idAxe)
     {
         return $this->EntityManager->getRepository($this->rep)->findBy(array("idAxe"=>$idAxe));

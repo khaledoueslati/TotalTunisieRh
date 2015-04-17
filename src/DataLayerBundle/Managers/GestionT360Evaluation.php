@@ -47,7 +47,7 @@ class GestionT360Evaluation {
 
         if(!$Superieur){
             //le cas du DG
-            $query=$this->EntityManager->createQuery("select eval
+            $query=$this->EntityManager->createQuery("select eval as evaluation , (select count(reponse.id) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cin AND reponse.idEval=eval.idEvaluation )as rep
                                                   from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
                                                   WHERE (eval.cinEvalue=$cin) OR
                                                         (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cin)" );
@@ -55,7 +55,7 @@ class GestionT360Evaluation {
         }else if($niveauPoste==1) {
             //le cas d'un directeur de departement
             $cinSup=$Superieur->getCin();
-            $query=$this->EntityManager->createQuery("select eval
+            $query=$this->EntityManager->createQuery("select eval as evaluation , (select count(reponse.id) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cin AND reponse.idEval=eval.idEvaluation )as rep
                                                   from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
                                                   WHERE (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cinSup)  OR
                                                         (eval.cinEvalue=$cinSup) OR
@@ -67,7 +67,7 @@ class GestionT360Evaluation {
         }else{
             // le cas general
             $cinSup=$Superieur->getCin();
-            $query=$this->EntityManager->createQuery("select eval
+            $query=$this->EntityManager->createQuery("select eval as evaluation , (select count(reponse.id) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cin AND reponse.idEval=eval.idEvaluation )as rep
                                                   from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
                                                   WHERE (employee.poste=dp.idDirectionPostes AND
                                                         dp.Direction=$id_direction AND

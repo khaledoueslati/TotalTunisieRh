@@ -35,6 +35,23 @@ class T360AxesController extends Controller
             'entities' => $entities,
         );
     }
+
+    /**
+     *
+     * @Route("/show/{id}", name="t360axes_with_id")
+     * @Template("AppT360Bundle:T360Axes:index.html.twig")
+     */
+    public function indexWithIdAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('DataLayerBundle:T360Axes')->findAll();
+
+        return array(
+            'entities' => $entities,
+            'activeId'=> $id
+        );
+    }
     /**
      * Creates a new T360Axes entity.
      *
@@ -53,7 +70,7 @@ class T360AxesController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360axes_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('t360axes_with_id', array('id' => $entity->getId())));
         }
 
         return array(
@@ -174,7 +191,7 @@ class T360AxesController extends Controller
 
 
         $form = $this->createFormBuilder($entity)
-            ->add('id','integer')
+            ->add('id','integer',array("disabled"=>true))
             ->add('Libelle', 'text')
             ->setMethod('PUT')
             ->setAction($this->generateUrl('t360axes_update', array('id' => $entity->getId())))
@@ -208,7 +225,7 @@ class T360AxesController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360axes', array('id' => $id)));
+            return $this->redirect($this->generateUrl('t360axes_with_id', array('id' => $entity->getId())));
         }
 
         return array(

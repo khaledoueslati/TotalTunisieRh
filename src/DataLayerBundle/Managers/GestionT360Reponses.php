@@ -108,7 +108,6 @@ class GestionT360Reponses {
 
     public function getReponsesNumberByEval($idEval)
     {
-
         $query = $this->EntityManager->createQuery("select count(reponse.id) as reponsesPerAxe
                                                   from DataLayerBundle:T360Reponses reponse, DataLayerBundle:T360Questions question
                                                   WHERE  reponse.idEval=$idEval and question.id = reponse.idQuestion
@@ -116,6 +115,70 @@ class GestionT360Reponses {
                                                   ");
         return count($query->getResult());
     }
+    /*****************************Historique*******************************************************************/
+
+    public function getAvgReponsesByEmployee($cin)
+    {
+        $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average,eval.dateDebut
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question,DataLayerBundle:T360Evaluations eval
+                                                    WHERE  reponse.idEval=eval.idEvaluation And reponse.idQuestion=question.id AND eval.cinEvalue=$cin
+                                                    GROUP By eval.dateDebut,reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
+    public function getAvgSuperieurResponsesByEmployee($cin)
+    {
+        $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average ,evaluation.dateDebut
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee
+                                                    WHERE  reponse.idEval=evaluation.idEvaluation  And
+                                                            reponse.idQuestion=question.id and
+                                                            reponse.idEval=evaluation.idEvaluation AND
+                                                            evaluation.cinEvalue=$cin AND
+                                                            employee.cin=$cin AND
+                                                            employee.supHierarchique=reponse.idEmployee
+                                                    GROUP By evaluation.dateDebut,reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
+    public function getAvgSubordoneeResponsesByEmployee($cin){
+        $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average, evaluation.dateDebut
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeSub
+                                                    WHERE  reponse.idEval=evaluation.idEvaluation  And
+                                                            reponse.idQuestion=question.id and
+                                                            employee.cin=$cin And
+                                                            evaluation.cinEvalue=employee.cin AND
+                                                            reponse.idEmployee=employeeSub.cin AND
+                                                            employeeSub.supHierarchique=employee.cin
+                                                    GROUP By evaluation.dateDebut,reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
+    public function getAvgColleguesResponsesByEmployee($cin){
+        //a remplir plus tard car manque de donnée dans la base
+    }
+
+    public function getAvgHistoriqueReponseByEmployee($cin){
+        $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average, evaluation.dateDebut ,axe.libelle
+                                                    from DataLayerBundle:T360Axes axe,DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeSub
+                                                    WHERE  reponse.idEval=evaluation.idEvaluation  And
+                                                            reponse.idQuestion=question.id and
+                                                            employee.cin=$cin And
+                                                            evaluation.cinEvalue=employee.cin AND
+                                                            question.idAxe=axe.id
+                                                    GROUP By evaluation.dateDebut,reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
+    public function  getReponseByEvalByCin($idEval,$cinEvaluateur){
 
 
+        $query = $this->EntityManager->createQuery("select reponse.id , reponse.valeur , IDENTITY (reponse.idEmployee), IDENTITY (reponse.idEval), IDENTITY (reponse.idQuestion) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cinEvaluateur AND reponse.idEval=$idEval");
+
+        return $query->getResult();
+
+    }
 } 

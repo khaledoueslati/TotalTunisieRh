@@ -335,6 +335,69 @@ class T360ReponsesController extends Controller
     public function showDirectionsResultAction()
     {
         $directions = $this->get('directions.service')->getAll();
-        return array("directions"=>$directions);
+        return array("directions" => $directions);
+    }
+
+    /**
+     * @Route("/historique/results/service/{cin}", name="get_historique_results_service")
+     *
+     */
+    public function getHistoriqueAction($cin)
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $reponses = $this->get("t360reponse.service")->getAvgHistoriqueReponseByEmployee($cin);
+        // if(sizeof($evaluations_array)!=0)
+        $JsonResult = $serializer->serialize($reponses, 'json');
+        //$evaluations_array[0]->getId();
+        $response = new Response($JsonResult);
+//        $response
+//        return array("JsonResult"=>$response);
+        return $response;
+    }
+
+    /**
+     * @Route("/historique/results/{cin}", name="get_historique_results")
+     * @Template()
+     */
+    public function showHistoriqueAction($cin)
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $reponses = $this->get("t360reponse.service")->getAvgHistoriqueReponseByEmployee($cin);
+        // if(sizeof($evaluations_array)!=0)
+        $JsonResult = $serializer->serialize($reponses, 'json');
+        //$evaluations_array[0]->getId();
+        $response = new Response($JsonResult);
+//        $response
+        return array("JsonResult" => utf8_encode($response->getContent()));
+//        return array("cin"=>$cin);
+//        return $response;
+    }
+
+    /**
+     * @Route("/historique/employees", name="get_emplyees_for_historique")
+     * @Template()
+     */
+    public function showEmployeeAction()
+    {
+        $employees = $this->get('employee.service')->getAll();
+        return array("entities" => $employees);
+    }
+
+    /**
+     * @Route("/reponse/{idEval}/{cinEvaluateur}")
+     *
+     */
+    public function getEmployeeReponseByEvalAction($idEval,$cinEvaluateur)
+    {
+
+        $serializer = $this->container->get('jms_serializer');
+        $reponses = $this->get("t360reponse.service")->getReponseByEvalByCin($idEval,$cinEvaluateur);
+
+        // if(sizeof($evaluations_array)!=0)
+        $JsonResult = $serializer->serialize($reponses, 'json');
+        //echo $JsonResult ;
+        $response =new Response($JsonResult);
+        return  $response;
+
     }
 }

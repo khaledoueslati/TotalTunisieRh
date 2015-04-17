@@ -1,0 +1,183 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block body -%}
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts-more.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/exporting.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highslide-full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highslide.config.js') }}"></script>
+    <link href="{{ asset('bundles/AppT360/css/highslide.css') }}" rel="stylesheet" type="text/css"/>
+    <script>
+        function getNewDataObject() {
+            return {
+                name: '',
+                data: []
+            };
+        }
+        function getValueToDisplay(year,axe,array){
+            var result="";
+            for(var valeur in array[year][axe]){
+                result+="<strong>"+valeur+'</strong> : '+array[year][axe][valeur]+' <br/>';
+
+            }
+            return result;
+        }
+
+        $(document).ready(function () {
+
+            var jsonObjects = JSON.parse($("#JsonResult").text());
+            $("#JsonResult").remove();
+            var axis = [];
+            var data = [];
+            var curveNames = [];
+            var oldAxe = "";
+            var compteur = 0;
+            var sommeAvrg = 0;
+            var detailsArray = {};
+
+            for (var i = 0; i < jsonObjects.length; i++) {
+                var year = (new Date(jsonObjects[i].dateDebut)).getFullYear();
+                if ($.inArray(year, axis) < 0) {
+                    axis.push(year);
+                }
+                var posCurveName = $.inArray(jsonObjects[i].libelle, curveNames);
+                if (oldAxe != jsonObjects[i].libelle) {
+                    if (posCurveName < 0) {
+                        curveNames.push(jsonObjects[i].libelle);
+                        data.push(getNewDataObject());
+                        data[curveNames.length - 1].name = jsonObjects[i].libelle;
+                        if (compteur != 0) {
+                            data[curveNames.length - 2].data.push(sommeAvrg / compteur);
+                        }
+                        compteur = 1;
+                        sommeAvrg = parseFloat(jsonObjects[i].average);
+                        if (!detailsArray[year]) {
+                            detailsArray[year] = {};
+                        }
+                        if (!detailsArray[year][jsonObjects[i].libelle]) {
+                            detailsArray[year][jsonObjects[i].libelle] = {};
+                        }
+                        detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
+                    } else {
+                        if (posCurveName == 0) {
+                            data[curveNames.length - 1].data.push(sommeAvrg / compteur);
+                            if (!detailsArray[year]) {
+                                detailsArray[year] = {};
+                            }
+                            if (!detailsArray[year][jsonObjects[i].libelle]) {
+                                detailsArray[year][jsonObjects[i].libelle] = {};
+                            }
+                            detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
+                        } else {
+                            data[posCurveName - 1].data.push(sommeAvrg / compteur);
+                            if (!detailsArray[year]) {
+                                detailsArray[year] = {};
+                            }
+                            if (!detailsArray[year][jsonObjects[i].libelle]) {
+                                detailsArray[year][jsonObjects[i].libelle] = {};
+                            }
+                            detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
+                        }
+                        sommeAvrg = parseFloat(jsonObjects[i].average);
+                        compteur = 1;
+                    }
+                    oldAxe = jsonObjects[i].libelle;
+                } else {
+                    sommeAvrg += parseFloat(jsonObjects[i].average);
+                    if (!detailsArray[year]) {
+                        detailsArray[year] = {};
+                    }
+                    if (!detailsArray[year][jsonObjects[i].libelle]) {
+                        detailsArray[year][jsonObjects[i].libelle] = {};
+                    }
+                    detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
+                    compteur++;
+                }
+
+                if ((jsonObjects.length - 1) == i) {
+                    data[posCurveName].data.push(sommeAvrg / compteur);
+                    if (!detailsArray[year]) {
+                        detailsArray[year] = {};
+                    }
+                    if (!detailsArray[year][jsonObjects[i].libelle]) {
+                        detailsArray[year][jsonObjects[i].libelle] = {};
+                    }
+                    detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
+                }
+            }
+
+
+            Highcharts.setOptions({
+                colors: ['#ED1A3B', '#4596D1', '#F8981D', '#034EA2']
+            });
+
+
+            $('#historique-par-axe').highcharts({
+                title: {
+                    text: 'historique d\'évaluation 360°',
+                    x: -20 //center
+                },
+                xAxis: {
+                    categories: axis
+                },
+                yAxis: {
+                    title: {
+                        text: 'Valeurs'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                credits : {
+                  enabled: false
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: data,
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+                        point: {
+                            events: {
+                                click: function (e) {
+                                    hs.htmlExpand(null, {
+                                        pageOrigin: {
+                                            x: e.pageX || e.clientX,
+                                            y: e.pageY || e.clientY
+                                        },
+                                        outlineType: 'rounded-white',
+                                        headingText: this.series.name,
+                                        maincontentText: getValueToDisplay(this.category,this.series.name,detailsArray),
+                                        width: 320
+                                    });
+                                }
+                            }
+                        },
+                        marker: {
+                            lineWidth: 1
+                        }
+                    }
+                }
+            });
+        });
+
+
+    </script>
+
+    <div class="container">
+        <div class="row">
+            <div id="historique-par-axe">
+
+            </div>
+            <div id="JsonResult" hidden="hidden">
+                {{ JsonResult }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

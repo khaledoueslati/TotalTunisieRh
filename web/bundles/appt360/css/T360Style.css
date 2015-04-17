@@ -7,3 +7,12 @@
     cursor: pointer;
 }
 
+.text-red-total{
+    color: #3c8dbc !important;
+}.text-blue-total{
+     color: #3c8dbc !important;
+ }.text-light-blue-total{
+      color: #3c8dbc !important;
+  }.text-yellow-total{
+       color: #3c8dbc !important;
+   }

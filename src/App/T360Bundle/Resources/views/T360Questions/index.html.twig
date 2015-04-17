@@ -1,39 +1,82 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <table class="records_list">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Enonce</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('t360questions_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.enonce }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('t360questions_show', { 'id': entity.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('t360questions_edit', { 'id': entity.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('t360questions_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+    {% if error is defined %}
+
+
+
+        <div class="center-block text-center">
+            <h4 class="text-blue-total"><span class="fa fa-info-circle"> </span> &nbsp; Pas de question inscrite pour cet axe</h4>
+
+            <p class="text-muted">Veuillez ajouter des questions</p>
+        </div>
+
+
+
+
+
+    {% else %}
+        <table class="table table-hover center-block">
+            <thead>
+            <tr>
+                <td class="col-lg-1"><h5><strong>#</strong></h5></td>
+                <td class="col-lg-2"><h5><strong>Enoncé</strong></h5></td>
+                <td class="col-lg-2"><h5><strong>Actions</strong></h5></td>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for i in 0..entities|length-1 %}
+                <tr>
+                    <td class="col-lg-1">
+                        <span class="badge">{{ i+1 }}</span>
+                    </td>
+                    <td class="col-lg-1">
+                        <h5>{{ entities[i].enonce }}</h5>
+                    </td>
+                    <td class="col-lg-2">
+                        <a class="btn btn-primary hvr-grow edit-click" data-toggle="modal" href="#edit-question-modal"
+                           data-href="{{ path('t360questions_edit', { 'id': attribute(entities,i).id }) }}">
+                            <i class="fa fa-edit"></i>&nbsp; Edit
+                        </a>
+                        <a class="btn btn-box-tool hvr-grow "
+                        href="{{ path('t360questions_delete_get', { 'id': attribute(entities,i).id }) }}">
+                        <i class="fa fa-trash"></i>&nbsp; Delete
+                        </a>
+                        {#<a class="btn btn-box-tool hvr-grow delete"#}
+                           {#href="">#}
+                            {#<i class="fa fa-trash"></i>&nbsp; Delete#}
+                        {#</a>#}
+
+                    </td>
+
+                </tr>
+
+
+
+            {% endfor %}
+
+
+            </tbody>
+        </table>
+
+    {% endif %}
+    <script>
+        $(".edit-click").click(function () {
+            $("#edit-question-overlay").show();
+            $.ajax({url: $(this).attr("data-href")}).then(function (data) {
+                $("#form-edit-question").html(data);
+                $("#edit-question-overlay").toggle();
+            });
+        });
+
+        $(".delete").click(function () {
+            if(confirm("test")){
+
+            }else{
+
+            }
+        });
+    </script>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace DataLayerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * T360Questions
@@ -18,6 +19,8 @@ class T360Questions
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     *
      */
     private $id;
 
@@ -25,6 +28,13 @@ class T360Questions
      * @var string
      *
      * @ORM\Column(name="enonce", type="string", length=45, nullable=false)
+     *
+     * @Assert\NotNull
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Enoncé de la question ne doit pas contenir de nombre"
+     * )
      */
     private $enonce;
 
@@ -35,6 +45,8 @@ class T360Questions
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_axe", referencedColumnName="id")
      * })
+     *
+     * @Assert\NotNull
      */
     private $idAxe;
 

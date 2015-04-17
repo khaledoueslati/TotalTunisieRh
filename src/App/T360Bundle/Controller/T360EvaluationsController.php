@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use DataLayerBundle\Entity\T360Evaluations;
 use DataLayerBundle\Form\T360EvaluationsType;
+use Symfony\Component\Validator\Constraints\Date;
+
 /**
  * T360Evaluations controller.
  *
@@ -46,6 +48,8 @@ class T360EvaluationsController extends Controller
     public function createAction(Request $request)
     {
         $entity = new T360Evaluations();
+//        $entity->setDateDebut(date('y-m-d'));
+
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -134,6 +138,7 @@ class T360EvaluationsController extends Controller
      */
     public function editAction($id)
     {
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('DataLayerBundle:T360Evaluations')->find($id);

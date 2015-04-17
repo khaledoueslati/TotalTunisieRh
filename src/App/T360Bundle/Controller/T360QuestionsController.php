@@ -1,6 +1,7 @@
 <?php
 
 namespace App\T360Bundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -33,6 +34,7 @@ class T360QuestionsController extends Controller
 
         return array(
             'entities' => $entities,
+
         );
     }
 
@@ -40,12 +42,29 @@ class T360QuestionsController extends Controller
      * @Route("/axeid/{id}", name="t360questions_axeid")
      * @Template("AppT360Bundle:T360Questions:index.html.twig")
      */
-    public function indexByAxeAction($id){
-        $entities=$this->get("t360question.service")->getByAxe($id);
-        return array(
-            'entities' => $entities,
-        );
+    public function indexByAxeAction($id)
+    {
+        $entities = $this->get("t360question.service")->getByAxe($id);
+
+       if(count($entities)==0){
+           return array('error'=> 1);
+       }else{
+           $deleteForms = array();
+
+           for ($i = 0; $i < count($entities); $i++) {
+               $deleteForm = $this->createDeleteForm($entities[$i]->getId());
+//            $deleteForms = $deleteForm->createView();
+               array_push($deleteForms,$deleteForm->createView());
+           }
+
+
+           return array(
+               'entities' => $entities,
+               'deleteForms' => $deleteForms
+           );
+       }
     }
+
     /**
      * Creates a new T360Questions entity.
      *
@@ -64,12 +83,12 @@ class T360QuestionsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360questions_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('t360axes_with_id', array('id' => $entity->getIdAxe()->getId())));
         }
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -102,11 +121,11 @@ class T360QuestionsController extends Controller
     public function newAction()
     {
         $entity = new T360Questions();
-        $form   = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity);
 
         return array(
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -130,7 +149,7 @@ class T360QuestionsController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -156,8 +175,8 @@ class T360QuestionsController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -180,6 +199,7 @@ class T360QuestionsController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing T360Questions entity.
      *
@@ -203,16 +223,16 @@ class T360QuestionsController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
-
-            return $this->redirect($this->generateUrl('t360questions_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('t360axes_with_id', array('id' => $entity->getIdAxe()->getId())));
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a T360Questions entity.
      *
@@ -238,6 +258,18 @@ class T360QuestionsController extends Controller
 
         return $this->redirect($this->generateUrl('t360questions'));
     }
+    /**
+     * Deletes a T360Questions entity.
+     *
+     * @Route("/delete/{id}", name="t360questions_delete_get")
+     *
+     */
+    public function deleteGetAction($id)
+    {
+        $this->get("t360question.service")->deleteQuestion($id);
+
+        return $this->redirect($this->generateUrl('t360axes'));
+    }
 
     /**
      * Creates a form to delete a T360Questions entity by id.
@@ -251,9 +283,8 @@ class T360QuestionsController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('t360questions_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-            ;
+            ->add('submit', 'submit', array('label' => "Delete",'attr'=>array("class"=>"btn btn-box-tool hvr-grow")))
+            ->getForm();
     }
 
     /**
@@ -262,11 +293,11 @@ class T360QuestionsController extends Controller
     public function showByAxeAction($idAxe)
     {
         $serializer = $this->container->get('jms_serializer');
-        $questions_array=$this->get("t360question.service")->getByAxe($idAxe);
+        $questions_array = $this->get("t360question.service")->getByAxe($idAxe);
         // if(sizeof($evaluations_array)!=0)
         $JsonQuestions = $serializer->serialize($questions_array, 'json');
         //$evaluations_array[0]->getId();
-        $response =new Response($JsonQuestions);
+        $response = new Response($JsonQuestions);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
@@ -277,11 +308,11 @@ class T360QuestionsController extends Controller
     public function getAllQuestionsAction()
     {
         $serializer = $this->container->get('jms_serializer');
-        $questions_array=$this->get("t360question.service")->getAll();
+        $questions_array = $this->get("t360question.service")->getAll();
         // if(sizeof($evaluations_array)!=0)
         $JsonQuestions = $serializer->serialize($questions_array, 'json');
         //$evaluations_array[0]->getId();
-        $response =new Response($JsonQuestions);
+        $response = new Response($JsonQuestions);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
@@ -290,13 +321,15 @@ class T360QuestionsController extends Controller
      *
      * @Route("/service/questionsPerAxe",name="questions_per_axes")
      */
-    public function getQuestionsPerAxes(){
+    public function getQuestionsPerAxes()
+    {
         $serializer = $this->container->get('jms_serializer');
-        $questions_array=$this->get("t360question.service")->getQuestionPerAxes();
+        $questions_array = $this->get("t360question.service")->getQuestionPerAxes();
         // if(sizeof($evaluations_array)!=0)
         $JsonQuestions = $serializer->serialize($questions_array, 'json');
         //$evaluations_array[0]->getId();
-        $response =new Response($JsonQuestions);
+        $response = new Response($JsonQuestions);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
-    }}
+    }
+}
