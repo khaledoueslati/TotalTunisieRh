@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Employees</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Cin</th>
+                <td>{{ entity.cin }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ entity.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ entity.prenom }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Dateembauche</th>
+                <td>{{ entity.dateEmbauche }}</td>
+            </tr>
+            <tr>
+                <th>Sexe</th>
+                <td>{{ entity.sexe }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ entity.password }}</td>
+            </tr>
+            <tr>
+                <th>Identitesmartphone</th>
+                <td>{{ entity.identiteSmartphone }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('employees') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('employees_edit', { 'id': entity.cin }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

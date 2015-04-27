@@ -84,4 +84,50 @@ class GestionT360Evaluation {
 
     }
 
+    public function getEvalToDiplayForNonAdmin($cin)
+    {
+        $repository=$this->EntityManager->getRepository("DataLayerBundle:Employees");
+        $person=$repository->find($cin);
+        $id_direction=$person->getPoste()->getDirection()->getIdDirection();
+        $niveauPoste=$person->getPoste()->getPoste()->getNiveau();
+        $Superieur=$person->getSupHierarchique();
+
+        if(!$Superieur){
+            //le cas du DG
+            $query=$this->EntityManager->createQuery("select eval
+                                                  from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
+                                                  WHERE (eval.cinEvalue=$cin) OR
+                                                        (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cin)" );
+
+        }else if($niveauPoste==1) {
+            //le cas d'un directeur de departement
+            $cinSup=$Superieur->getCin();
+            $query=$this->EntityManager->createQuery("select eval
+                                                  from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
+                                                  WHERE (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cinSup)  OR
+                                                        (eval.cinEvalue=$cinSup) OR
+                                                        (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cin) OR
+                                                        (eval.cinEvalue=$cin)
+
+                                                        " );
+
+        }else{
+            // le cas general
+            $cinSup=$Superieur->getCin();
+            $query=$this->EntityManager->createQuery("select eval
+                                                  from DataLayerBundle:T360Evaluations eval,DataLayerBundle:Employees employee,DataLayerBundle:DirectionsPostes dp,DataLayerBundle:Postes poste
+                                                  WHERE (employee.poste=dp.idDirectionPostes AND
+                                                        dp.Direction=$id_direction AND
+                                                        eval.cinEvalue=employee.cin AND
+                                                        dp.Poste=poste.idPoste AND
+                                                        poste.niveau=$niveauPoste)  OR
+                                                        (eval.cinEvalue=$cinSup) OR
+                                                        (eval.cinEvalue=employee.cin AND employee.supHierarchique=$cin)
+
+                                                        " );
+
+        }
+        return $query->getResult();
+
+    }
 } 

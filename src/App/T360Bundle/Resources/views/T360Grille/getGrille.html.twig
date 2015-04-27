@@ -1,0 +1,353 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+{% block headerName %}
+    <link href="{{ asset('bundles/AppT360/css/square/red.css') }}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/icheck.min.js') }}"></script>
+
+    {# power tip files#}
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/core.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/csscoordinates.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/displaycontroller.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/placementcalculator.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/tooltipcontroller.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("bundles/AppT360/js/utility.js") }}"></script>
+    <!-- end-scripts -->
+    <link href="{{ asset('bundles/AppT360/css/jquery.powertip-red.css') }}" rel="stylesheet" type="text/css"/>
+
+
+
+    <h1>Grille d'évaluation de : {{ evaluation.cinEvalue.nom|capitalize }}
+        &nbsp;{{ evaluation.cinEvalue.prenom|capitalize }}</h1>
+    <h1>
+        <small>{{ evaluation.cinEvalue.poste.poste|capitalize }}
+            &nbsp; {{ evaluation.cinEvalue.poste.direction }}</small>
+    </h1>
+{% endblock %}
+{% block body %}
+    {% set conteurRows = 0 %}
+
+    <script>
+        $(document).ready(function () {
+
+            var sendigURL = "{{ path("save_reponse") }}";
+            var countQuestion = "{{ questionCount }}";
+            var id_eval_ = "{{ evaluation.idEvaluation }}";
+            var id_employee_ = "{{ app.user.cin }}";
+            var rowWithtooltip = 0;
+
+            var reponses = [];
+            $('input').click(function () {
+                var row = $(this).attr('data-row');
+                var value = $(this).attr('value');
+                console.log("row =>  " + row + "  value => " + value);
+            });
+
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-red',
+                radioClass: 'iradio_square-red',
+                increaseArea: '20%' // optional
+            });
+
+            $('input').on('ifClicked', function (event) {
+//                alert(event.type + ' callback');
+                var row = $(this).attr('data-row');
+                var value = $(this).attr('value');
+                var questionId = $(this).attr('data-question-id');
+//                if(row in reponses){console.log("ok!")}
+                reponses[row] = {valeur: value, id_eval: id_eval_, id_employee: id_employee_, id_question: questionId};
+                var parentRowId = $(this).parent().parent().parent().attr('id');
+                if (parentRowId == rowWithtooltip) {
+                    $.powerTip.destroy($("#" + rowWithtooltip));
+                    if ($('#' + rowWithtooltip).hasClass('bg-warning')) {
+                        $('#' + rowWithtooltip).toggleClass('bg-warning');
+                    }
+
+                }
+//                console.log(par);
+//                $.powerTip.destroy($("#"+rowWithtooltip+""));
+//                console.log(reponses);
+
+            });
+
+            $("#send_responses_button").click(function () {
+                var verif = true;
+
+                if (reponses.length == 0) {
+                    verif = false;
+                    var mouseOnDiv = $('#0');
+                    var tipContent = $(
+                            '<p><b>Veuillez répondre à cette question</b></p>'
+                    );
+                    mouseOnDiv.data('powertipjq', tipContent);
+                    mouseOnDiv.powerTip({
+                        placement: 'w',
+                        mouseOnToPopup: true
+                    });
+                    $.powerTip.show($('#0'));
+                    $("#0").toggleClass('bg-warning');
+                    $('html, body').animate({
+                        scrollTop: $("#0").offset().top
+                    }, 1000);
+                } else {
+
+                    for (var i = 0; i < countQuestion; i++) {
+                        if (!(i in reponses)) {
+                            verif = false;
+                            console.log("error :) " + i);
+                            rowWithtooltip = i
+                            var mouseOnDiv = $('#' + rowWithtooltip);
+                            var tipContent = $(
+                                    '<p><b>Veuillez répondre à cette question</b></p>'
+                            );
+                            mouseOnDiv.data('powertipjq', tipContent);
+                            mouseOnDiv.powerTip({
+                                placement: 'e',
+                                mouseOnToPopup: true
+                            });
+                            $.powerTip.show($('#' + rowWithtooltip));
+                            $("#" + rowWithtooltip).toggleClass('bg-warning');
+                            $('html, body').animate({
+                                scrollTop: $("#" + rowWithtooltip).offset().top
+                            }, 1000);
+                            break;
+                        }
+                    }
+                }
+                console.log(verif);
+                console.log(JSON.stringify(reponses));
+                if (verif) {
+                    console.log("sending to ...." + sendigURL);
+                    $("#progress-container").show();
+                    $.ajax({
+                        url: sendigURL,
+                        type: 'POST',
+                        data: JSON.stringify(reponses),
+                        processData: false,
+                        ContentType: 'application/json',
+                        dataType: 'json',
+                        xhr: function () {
+                            var xhr = new window.XMLHttpRequest();
+                            xhr.upload.addEventListener("progress", function (evt) {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = (evt.loaded / evt.total) * 100;
+                                    $("#progress-send-bar").css("width", percentComplete + "%");
+//                                    console.log(percentComplete);
+                                    //Do something with upload progress here
+                                }
+                            }, false);
+
+
+                            return xhr;
+                        },
+                        success: function (resp) {
+//                           console.log(resp);
+                            if (resp != 1) {
+                                alert("reponses non evoyer. veuillez réessailler");
+                            }
+                        },
+                        error: function (resp) {
+                            console.log(resp);
+                            alert("reponses non evoyer. veuillez réessailler");
+                        }
+                    });
+                }
+//                else if (reponses.length < countQuestion) {
+//                    rowWithtooltip=reponses.length;
+//                    var mouseOnDiv = $('#'+rowWithtooltip);
+//                    var tipContent = $(
+//                            '<p><b>Veuillez répondre à cette question</b></p>'
+//                    );
+//                    mouseOnDiv.data('powertipjq', tipContent);
+//                    mouseOnDiv.powerTip({
+//                        placement: 'e',
+//                        mouseOnToPopup: true
+//                    });
+//                    $.powerTip.show($('#'+rowWithtooltip));
+//                    $('#'+rowWithtooltip).toggleClass('bg-warning');
+//                    $(this).attr("href","#"+rowWithtooltip);
+//                }
+                // mouse-on example
+//                var mouseOnDiv = $('#1');
+//                var tipContent = $(
+//                        '<p><b>Veuillez répondre à cette question</b></p>'
+//                );
+//                mouseOnDiv.data('powertipjq', tipContent);
+//                mouseOnDiv.powerTip({
+//                    placement: 'e',
+//                    mouseOnToPopup: true
+//                });
+//                $.powerTip.show($('#1'));
+//                $.powerTip.destroy($("#1"));
+
+
+                console.log(reponses);
+            });
+//            var questions=JSON.parse(jsonQuestions);
+            {#console.log("{{ questions }}");#}
+
+        });
+    </script>
+    <div class="container-fluid">
+        {% for i in 0..questions|length-1 %}
+            <div class="row">
+                <div class="col-lg-offset-2 col-lg-8  col-md-offset-2 col-md-6 col-sm-12">
+                    <div class="panel panel-default box box-body box-danger">
+                        <table class="table table-hover table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <td class="col-lg-4"><h5><strong>{{ axes[i].libelle }}</strong></h5></td>
+                                <td class="col-lg-1">
+                                    <div class="row text-gray">1</div>
+                                    <div class="row">Faux</div>
+                                </td>
+                                <td class="col-lg-2">
+                                    <div class="row  text-gray">2</div>
+                                    <div class="row">Plutôt faux</div>
+                                </td>
+                                <td class="col-lg-2">
+                                    <div class="row text-gray">3</div>
+                                    <div class="row">Moyennement vrai</div>
+                                </td>
+                                <td class="col-lg-2">
+                                    <div class="row text-gray">4</div>
+                                    <div class="row">Plutôt vrai</div>
+                                </td>
+                                <td class="col-lg-1">
+                                    <div class="row text-gray">5</div>
+                                    <div class="row">Vrai</div>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for element in questions[i] %}
+                                {% if oldReponses is defined %}
+                                    <tr id="{{ conteurRows }}">
+                                        <td>{{ element.enonce }}</td>
+                                        <td>
+                                            {% if oldReponses[conteurRows].valeur==1 %}
+                                                <input type="radio" class="radio_click" value="1"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}" checked>
+                                            {% else %}
+                                                <input type="radio" class="radio_click" value="1"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}">
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if oldReponses[conteurRows].valeur==2 %}
+                                                <input type="radio" class="radio_click" value="2"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}" checked>
+                                            {% else %}
+                                                <input type="radio" class="radio_click" value="2"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}">
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if oldReponses[conteurRows].valeur==3 %}
+                                                <input type="radio" class="radio_click" value="3"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}" checked>
+                                            {% else %}
+                                                <input type="radio" class="radio_click" value="3"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}">
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if oldReponses[conteurRows].valeur==4 %}
+                                                <input type="radio" class="radio_click" value="4"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}" checked>
+                                            {% else %}
+                                                <input type="radio" class="radio_click" value="4"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}">
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if oldReponses[conteurRows].valeur==5 %}
+                                                <input type="radio" class="radio_click" value="5"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}" checked>
+                                            {% else %}
+                                                <input type="radio" class="radio_click" value="5"
+                                                       name="iCheck_{{ element.enonce }}"
+                                                       data-question-id="{{ element.id }}"
+                                                       data-row="{{ conteurRows }}">
+                                            {% endif %}
+                                        </td>
+
+
+                                    </tr>
+                                {% else %}
+
+                                    <tr id="{{ conteurRows }}">
+                                        <td>{{ element.enonce }}</td>
+                                        <td>
+                                            <input type="radio" class="radio_click" value="1"
+                                                   name="iCheck_{{ element.enonce }}"
+                                                   data-question-id="{{ element.id }}"
+                                                   data-row="{{ conteurRows }}">
+
+                                        <td><input type="radio" class="radio_click" value="2"
+                                                   name="iCheck_{{ element.enonce }}"
+                                                   data-question-id="{{ element.id }}"
+                                                   data-row="{{ conteurRows }}"></td>
+                                        <td><input type="radio" class="radio_click" value="3"
+                                                   name="iCheck_{{ element.enonce }}"
+                                                   data-question-id="{{ element.id }}"
+                                                   data-row="{{ conteurRows }}"></td>
+                                        <td><input type="radio" class="radio_click" value="4"
+                                                   name="iCheck_{{ element.enonce }}"
+                                                   data-question-id="{{ element.id }}"
+                                                   data-row="{{ conteurRows }}"></td>
+                                        <td><input type="radio" class="radio_click" value="5"
+                                                   name="iCheck_{{ element.enonce }}"
+                                                   data-question-id="{{ element.id }}"
+                                                   data-row="{{ conteurRows }}"></td>
+                                    </tr>
+                                {% endif %}
+                                {% set conteurRows =conteurRows+1 %}
+                            {% endfor %}
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div id="progress-container" class=" col-lg-offset-5 col-lg-2" hidden="hidden">
+            <div class="progress progress-xxs " style="height: 5px">
+                <div id="progress-send-bar" class="progress-bar progress-bar-danger progress-bar-striped"
+                     role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                    <span class="sr-only">60% Complete (warning)</span>
+                </div>
+            </div>
+        </div>
+
+
+        <a class="btn btn-default text-blue col-lg-offset-5 col-lg-2" id="send_responses_button"> <span
+                    class="fa fa-upload"></span> &nbsp; Send Responses
+
+
+        </a>
+
+    </div>
+
+{% endblock %}

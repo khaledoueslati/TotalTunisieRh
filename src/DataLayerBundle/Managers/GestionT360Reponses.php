@@ -4,13 +4,16 @@
 namespace DataLayerBundle\Managers;
 
 
+use DataLayerBundle\Entity\T360Reponses;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use \Symfony\Component\Config\Definition\Exception\Exception;
-class GestionT360Reponses {
+
+class GestionT360Reponses
+{
 
     private $EntityManager;
-    private $rep="DataLayerBundle:T360Reponses";
+    private $rep = "DataLayerBundle:T360Reponses";
 
     public function __construct(EntityManager $em)
     {
@@ -41,7 +44,8 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function getSubordoneeResponsesByEvaluation($idEval){
+    public function getSubordoneeResponsesByEvaluation($idEval)
+    {
         $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average
                                                     from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeSub
                                                     WHERE  reponse.idEval=$idEval  And
@@ -55,13 +59,14 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function getColleguesResponsesByEvaluation($idEval){
+    public function getColleguesResponsesByEvaluation($idEval)
+    {
         //a remplir plus tard car manque de donnée dans la base
     }
 
     public function getDirectionsResults()
     {
-        $query=$this->EntityManager->createQuery("Select direction.idDirection as idDirection,direction.libelle as directionLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne
+        $query = $this->EntityManager->createQuery("Select direction.idDirection as idDirection,direction.libelle as directionLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne
                                                     from DataLayerBundle:T360Questions question , DataLayerBundle:T360Reponses reponse ,DataLayerBundle:Directions direction , DataLayerBundle:DirectionsPostes dp , DataLayerBundle:Employees employee , DataLayerBundle:T360Evaluations eval
                                                     WHERE reponse.idEval=eval.idEvaluation AND
                                                           eval.cinEvalue=employee.cin AND
@@ -75,7 +80,7 @@ class GestionT360Reponses {
 
     public function getDirectionsResultsById($idDirection)
     {
-        $query=$this->EntityManager->createQuery("Select direction.idDirection as idDirection,direction.libelle as directionLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne, axe.libelle as axeLibelle
+        $query = $this->EntityManager->createQuery("Select direction.idDirection as idDirection,direction.libelle as directionLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne, axe.libelle as axeLibelle
                                                     from DataLayerBundle:T360Questions question , DataLayerBundle:T360Reponses reponse ,DataLayerBundle:Directions direction , DataLayerBundle:DirectionsPostes dp , DataLayerBundle:Employees employee , DataLayerBundle:T360Evaluations eval,DataLayerBundle:T360Axes axe
                                                     WHERE reponse.idEval=eval.idEvaluation AND
                                                           eval.cinEvalue=employee.cin AND
@@ -89,7 +94,8 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function getAutoResponsesByEvaluation($idEval){
+    public function getAutoResponsesByEvaluation($idEval)
+    {
         $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average
                                                     from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee
                                                     WHERE  reponse.idEval=$idEval  And
@@ -102,7 +108,8 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function ajoutReponse($reponse){
+    public function ajoutReponse($reponse)
+    {
         $this->EntityManager->persist($reponse);
     }
 
@@ -115,6 +122,7 @@ class GestionT360Reponses {
                                                   ");
         return count($query->getResult());
     }
+
     /*****************************Historique*******************************************************************/
 
     public function getAvgReponsesByEmployee($cin)
@@ -142,7 +150,8 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function getAvgSubordoneeResponsesByEmployee($cin){
+    public function getAvgSubordoneeResponsesByEmployee($cin)
+    {
         $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average, evaluation.dateDebut
                                                     from DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeSub
                                                     WHERE  reponse.idEval=evaluation.idEvaluation  And
@@ -156,11 +165,13 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function getAvgColleguesResponsesByEmployee($cin){
+    public function getAvgColleguesResponsesByEmployee($cin)
+    {
         //a remplir plus tard car manque de donnée dans la base
     }
 
-    public function getAvgHistoriqueReponseByEmployee($cin){
+    public function getAvgHistoriqueReponseByEmployee($cin)
+    {
         $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average, evaluation.dateDebut ,axe.libelle
                                                     from DataLayerBundle:T360Axes axe,DataLayerBundle:T360Reponses reponse,DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeSub
                                                     WHERE  reponse.idEval=evaluation.idEvaluation  And
@@ -173,12 +184,31 @@ class GestionT360Reponses {
         return $query->getResult();
     }
 
-    public function  getReponseByEvalByCin($idEval,$cinEvaluateur){
-
+    public function  getReponseByEvalByCin($idEval, $cinEvaluateur)
+    {
 
         $query = $this->EntityManager->createQuery("select reponse.id , reponse.valeur , IDENTITY (reponse.idEmployee), IDENTITY (reponse.idEval), IDENTITY (reponse.idQuestion) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cinEvaluateur AND reponse.idEval=$idEval");
 
         return $query->getResult();
 
+    }
+
+    public function saveReponses($reponsesArray)
+    {
+        foreach ($reponsesArray as $reponse) {
+            if (array_key_exists("id", $reponse)) {
+                $tempReponse=$this->EntityManager->getRepository($this->rep)->find($reponse["id"]);
+                $tempReponse->setValeur($reponse["valeur"]);
+                $this->EntityManager->flush();
+            } else {
+                $entity=new T360Reponses();
+                $entity->setIdEmployee($this->EntityManager->getReference("DataLayerBundle:Employees",$reponse["id_employee"]));
+                $entity->setIdQuestion($this->EntityManager->getReference("DataLayerBundle:T360Questions",$reponse["id_question"]));
+                $entity->setIdEval($this->EntityManager->getReference("DataLayerBundle:T360Evaluations",$reponse["id_eval"]));
+                $entity->setValeur($reponse["valeur"]);
+                $this->EntityManager->persist($entity);
+                $this->EntityManager->flush();
+            }
+        }
     }
 } 

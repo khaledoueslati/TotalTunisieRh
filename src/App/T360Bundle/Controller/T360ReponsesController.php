@@ -387,17 +387,37 @@ class T360ReponsesController extends Controller
      * @Route("/reponse/{idEval}/{cinEvaluateur}")
      *
      */
-    public function getEmployeeReponseByEvalAction($idEval,$cinEvaluateur)
+    public function getEmployeeReponseByEvalAction($idEval, $cinEvaluateur)
     {
 
         $serializer = $this->container->get('jms_serializer');
-        $reponses = $this->get("t360reponse.service")->getReponseByEvalByCin($idEval,$cinEvaluateur);
+        $reponses = $this->get("t360reponse.service")->getReponseByEvalByCin($idEval, $cinEvaluateur);
 
         // if(sizeof($evaluations_array)!=0)
         $JsonResult = $serializer->serialize($reponses, 'json');
         //echo $JsonResult ;
-        $response =new Response($JsonResult);
-        return  $response;
+        $response = new Response($JsonResult);
+        return $response;
+
+    }
+
+    /**
+     *
+     * @Route("/reponse/save", name="save_reponse")
+     * @Method("POST")
+     */
+
+    public function saveResponseAction(Request $request)
+    {
+
+        $serializer = $this->container->get('jms_serializer');
+        $jsonResults = $request->getContent();
+//        $jsonResults = '[{"valeur":"2","id_eval":"3","id_question":"15","id_employee":"25363636"}]';
+        $reponsesArray = $serializer->deserialize($jsonResults, 'Doctrine\Common\Collections\ArrayCollection', 'json');
+//        $this->get("t360reponse.service")->saveReponses($reponsesArray);
+
+
+        return new Response(1);
 
     }
 }

@@ -1,0 +1,121 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block headerName %}
+    <h1>Employees list</h1>
+{% endblock %}
+{% block body -%}
+    <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#employees_table").dataTable();
+
+        });
+    </script>
+
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12" data-toggle="modal"
+             data-target="#new_employee">
+            <div class="info-box hvr-grow">
+                <span class="info-box-icon bg-red"><i class="fa fa-plus"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Ajouter Employé</span>
+
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box hvr-grow">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-plus"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Ajouter Direction</span>
+
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box hvr-grow">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-plus"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Ajouter Poste</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+    </div>
+    <div class="panel panel-default box box-body box-danger">
+        <table id="employees_table" class="table table-hover table-bordered text-center">
+            <thead>
+            <tr>
+                <th>Cin</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Email</th>
+                <th>Date Embauche</th>
+                <th>Sexe</th>
+                <th>Username</th>
+                <th></th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('employees_show', { 'id': entity.cin }) }}">{{ entity.cin }}</a></td>
+                    <td>{{ entity.nom }}</td>
+                    <td>{{ entity.prenom }}</td>
+                    <td>{{ entity.email }}</td>
+                    <td>{{ entity.dateEmbauche }}</td>
+                    <td>{{ entity.sexe }}</td>
+                    <td>{{ entity.username }}
+                    </td>
+                    <td>
+                        <a data-href="{{ path('employees_edit', { 'id': entity.cin }) }}"
+                           class="btn btn-primary hvr-grow"><span
+                                    class="fa fa-edit">&nbsp; Edit</span></a>
+                        {#<ul>#}
+                        {#<li>#}
+                        {#<a href="{{ path('employees_show', { 'id': entity.cin }) }}">show</a>#}
+                        {#</li>#}
+                        {##}
+                        {#</ul>#}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+
+    <div class="modal fade " id="new_employee" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajouter Employée</h3>
+
+                    <div class="modal-body">
+                        {{ render(controller('AppCommonBundle:Employees:new')) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

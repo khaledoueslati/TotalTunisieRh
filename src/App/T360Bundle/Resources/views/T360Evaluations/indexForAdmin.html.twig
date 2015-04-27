@@ -1,0 +1,116 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{% block headerName %}
+    <h1>Liste des Evaluations 360°</h1>
+{% endblock %}
+{% block body -%}
+    <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#evaluations_table").dataTable();
+
+        });
+    </script>
+
+
+    {% set compteur=0 %}
+    <div class="container">
+
+        <div class="panel panel-default box box-body box-danger">
+            <table id="evaluations_table" class="table table-hover table-bordered text-center">
+                <thead>
+                <tr>
+                    <th class="col-lg-1"><h5><strong>#</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Date Debut</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Date Fin</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Evalué</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Poste</strong></h5></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for entity in entities %}
+                    <tr>
+                        <td class="col-lg-1">
+                            <h5>
+                                {% if countResponses is defined %}
+                                    {% if countResponses[compteur]>0 %}
+                                        <div class="col-lg-1">
+                                            <span class="fa fa-check text-green"></span>
+                                        </div>
+                                        <span class="badge col-lg-offset-1">{{ entity.idEvaluation }}</span>
+                                    {% else %}
+                                        <div class="col-lg-1"></div>
+                                        <span class="badge col-lg-offset-1 ">{{ entity.idEvaluation }}</span>
+                                    {% endif %}
+
+                                {% else %}
+                                    <div class="col-lg-1"></div>
+                                    <span class="badge col-lg-offset-1 ">{{ entity.idEvaluation }}</span>
+                                {% endif %}
+
+
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.dateDebut|date('Y-m-d') }}</h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.dateFin|date('Y-m-d') }}</h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.cinEvalue.nom|capitalize ~ " "~ entity.cinEvalue.prenom|capitalize }}</h5>
+                        </td>
+                        <td class="col-lg-2">
+                            <h5>{{ entity.cinEvalue.Poste.Poste ~ " "~ entity.cinEvalue.Poste.Direction }}</h5>
+                        </td>
+                        <td class="col-lg-3">
+
+
+
+                                {% if countResponses is defined %}
+                                    {% if countResponses[compteur]>0 %}
+                                        <a href="{{ path('get_grille_by_eval',{ 'idEval': entity.idEvaluation ,'resp':1}) }}"
+                                           class="btn btn-primary hvr-grow"><span
+                                                    class="fa fa-edit">&nbsp; Remplir Grille d'évaluation</span></a>
+                                    {% else %}
+                                        <a href="{{ path('get_grille_by_eval',{ 'idEval': entity.idEvaluation,'resp':0 }) }}"
+                                           class="btn btn-primary hvr-grow"><span
+                                                    class="fa fa-edit">&nbsp; Remplir Grille d'évaluation</span></a>
+                                    {% endif %}
+
+                                {% else %}
+                                    <a href="{{ path('get_grille_by_eval',{ 'idEval': entity.idEvaluation , 'resp':0}) }}"
+                                       class="btn btn-primary hvr-grow"><span
+                                                class="fa fa-edit">&nbsp; Remplir Grille d'évaluation</span></a>
+                                {% endif %}
+
+
+
+                        </td>
+
+                    </tr>
+
+                    {% set compteur=compteur+1 %}
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    </div>
+    </div>
+
+
+
+
+
+
+{% endblock %}

@@ -4,18 +4,29 @@
     <h1>Liste des Evaluations 360</h1>
 {% endblock %}
 {% block body -%}
+    <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
 
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/dataTables.bootstrap.js') }}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#employees_table").dataTable();
+
+        });
+    </script>
     <div class="container">
         <br/>
 
         <div class="panel panel-default box box-body box-danger">
-            <table class="table table-hover table-bordered text-center">
+            <table id="employees_table" class="table table-hover table-bordered text-center">
                 <thead>
                 <tr>
-                    <td class="col-lg-1"><h5><strong>CIN</strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Nom </strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Prenom</strong></h5></td>
-                    <td class="col-lg-2"><h5><strong>Poste</strong></h5></td>
+                    <th class="col-lg-1"><h5><strong>CIN</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Nom </strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Prenom</strong></h5></th>
+                    <th class="col-lg-2"><h5><strong>Poste</strong></h5></th>
+                    <th></th>
 
                 </tr>
                 </thead>

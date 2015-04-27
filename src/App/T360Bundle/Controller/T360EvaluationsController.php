@@ -31,13 +31,63 @@ class T360EvaluationsController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        if($this->get('security.context')->isGranted('ROLE_ADMIN')){
+           // $entities = $em->getRepository('DataLayerBundle:T360Evaluations')->findAll();
+            $entities=$this->get("t360evaluation.service")->getAll();
 
-        $entities = $em->getRepository('DataLayerBundle:T360Evaluations')->findAll();
+            return array(
+                'entities' => $entities,
 
-        return array(
-            'entities' => $entities,
-        );
+            );
+        }
+        else{
+            $entities=$this->get("t360evaluation.service")->getEvalToDiplayForNonAdmin($user->getCin());
+
+            $responsesCount=array();
+            foreach($entities as $entity)
+            {
+                array_push($responsesCount, count($this->get("t360reponse.service")->getReponseByEvalByCin($entity->getIdEvaluation(),$user->getCin())));
+            }
+            return array(
+                'entities' => $entities,
+                'countResponses'=> $responsesCount,
+
+            );
+        }
+
+
     }
+
+    /**
+     * Lists all T360Evaluations entities.
+     *
+     * @Route("/remplir", name="t360evaluations_for_admin")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexForAdminAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+            $entities=$this->get("t360evaluation.service")->getEvalToDiplayForNonAdmin($user->getCin());
+            $responsesCount=array();
+            foreach($entities as $entity)
+            {
+                array_push($responsesCount, count($this->get("t360reponse.service")->getReponseByEvalByCin($entity->getIdEvaluation(),$user->getCin())));
+            }
+            return array(
+                'entities' => $entities,
+                'countResponses'=> $responsesCount,
+            );
+
+
+
+    }
+
+
+
     /**
      * Creates a new T360Evaluations entity.
      *
@@ -58,7 +108,7 @@ class T360EvaluationsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('t360evaluations_show', array('id' => $entity->getIdEvaluation())));
+            return $this->redirect($this->generateUrl('t360evaluations'));
         }
 
         return array(

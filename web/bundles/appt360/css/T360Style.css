@@ -16,3 +16,7 @@
   }.text-yellow-total{
        color: #3c8dbc !important;
    }
+.bg-white {
+    color: #000;
+    background-color: #ffffff !important;
+}

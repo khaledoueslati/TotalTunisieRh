@@ -1,0 +1,39 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>DirectionsPostes list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Iddirectionpostes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('directionspostes_show', { 'id': entity.idDirectionPostes }) }}">{{ entity.idDirectionPostes }}</a></td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('directionspostes_show', { 'id': entity.idDirectionPostes }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('directionspostes_edit', { 'id': entity.idDirectionPostes }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('directionspostes_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
