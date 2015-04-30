@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use DataLayerBundle\Entity\Postes;
 use DataLayerBundle\Entity\Directions;
 use DataLayerBundle\Entity\DirectionsPostes;
+use JMS\Serializer\Annotation\Type;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
@@ -14,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="employees", indexes={@ORM\Index(name="sup_hierarchique_idx", columns={"sup_hierarchique"}), @ORM\Index(name="role_grh_idx", columns={"role"}), @ORM\Index(name="poste_employees_idx", columns={"poste"})})
  * @ORM\Entity
+ * @UniqueEntity("username")
  */
 class Employees implements UserInterface
 {
@@ -22,7 +26,7 @@ class Employees implements UserInterface
      *
      * @ORM\Column(name="cin", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      */
     private $cin;
 
@@ -44,13 +48,16 @@ class Employees implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=45, nullable=true)
+     * @Assert\Email()
      */
     private $email;
 
     /**
-     * @var string
+     * @var date
      *
-     * @ORM\Column(name="date_embauche", type="string", length=45, nullable=true)
+     * @ORM\Column(name="date_embauche", type="date", length=45, nullable=true)
+     * @Type("DateTime<'Y-m-d'>")
+     * @Assert\NotNull
      */
     private $dateEmbauche;
 
@@ -64,7 +71,7 @@ class Employees implements UserInterface
     /**
      * @var \DirectionsPostes
      *
-     * @ORM\ManyToOne(targetEntity="DirectionsPostes")
+     * @ORM\ManyToOne(targetEntity="DirectionsPostes" )
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="poste", referencedColumnName="id")
      * })
@@ -124,6 +131,19 @@ class Employees implements UserInterface
     public function getCin()
     {
         return $this->cin;
+    }
+
+    /**
+     * Set cin
+     *
+     * @param integer $cin
+     * @return Employees
+     */
+    public function setCin($cin)
+    {
+        $this->cin = $cin;
+
+        return $this;
     }
 
     /**
@@ -321,7 +341,7 @@ class Employees implements UserInterface
     }
 
     /**
-     * Set username
+     * Set
      *
      * @param string $password
      * @return Employees
@@ -334,7 +354,7 @@ class Employees implements UserInterface
     }
 
     /**
-     * Get username
+     * Get
      *
      * @return string
      */
@@ -344,7 +364,7 @@ class Employees implements UserInterface
     }
 
     /**
-     * Set username
+     * Set
      *
      * @param string $identiteSmartphone
      * @return Employees
@@ -397,6 +417,12 @@ class Employees implements UserInterface
     }
 
     public function __toString(){
-        return $this->poste->getDirection()->getLibelle()." ".$this->poste->getPoste()->getLibelle()." ".$this->prenom." ".$this->nom;
+        if($this->poste!=null) {
+            return $this->prenom . " " . $this->nom." _ ". $this->poste->getDirection()->getLibelle() . "-" . $this->poste->getPoste()->getLibelle() ;
+        }
+        else{
+            return $this->prenom." ".$this->nom;
+        }
+//        return "";
     }
 }

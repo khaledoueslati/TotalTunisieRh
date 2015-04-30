@@ -58,7 +58,7 @@ class Postes
      */
     public function getIdPoste()
     {
-        return $this->idDirection;
+        return $this->idPoste;
     }
 
     /**
@@ -143,4 +143,6 @@ class Postes
     public function __toString(){
         return $this->libelle;
     }
+
+
 }

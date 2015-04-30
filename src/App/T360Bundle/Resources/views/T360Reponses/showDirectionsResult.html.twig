@@ -22,6 +22,8 @@
         var valeurs = [];
         var dataObj = [];
         var directionsId = [];
+        var directionLibelle=[];
+        var ecarts=[];
         /***********************************Donnes specifique aux directions*********************************/
         var brandsData = [];
         var drilldownData = [];
@@ -51,6 +53,7 @@
                     oldDirection = data[i].directionLibelle;
                     temp.data.push(parseFloat(data[i].moyenne));
                     directionsId.push(parseInt(data[i].idDirection));
+                    directionLibelle.push(data[i].directionLibelle);
                 } else {
                     temp.data.push(parseFloat(data[i].moyenne));
                 }
@@ -58,15 +61,8 @@
             }
             dataObj.push(temp);
             /***********************emulation de la 2em Direction*****************************/
-            var temp2 = {
-                name: 'direction Test',
-                data: []
-            };
-
-            for (var t = 0; t < temp.data.length; t++) {
-                temp2.data.push(temp.data[t] - 1);
-            }
-            dataObj.push(temp2);
+//
+            console.log(dataObj);
 
 
             /****************************Construction du graphe**********************************************/
@@ -114,27 +110,41 @@
 
 
             /****************************construction des données de graphe dedié à chaque **********************************************/
-            var tempBrandsData = [];
-            var tempDrillDown = [];
-            var brandsDataObj = {
-                drilldown: "",
-                name: "",
-                y: 0
-            };
+//            var tempBrandsData = [];
+//            var tempDrillDown = [];
+
 //                var idDirectionOld = 0;
             var axeOld = "";
-            var drillDownObj = {data: [], id: "", name: ""};
-            var directionResultURL="{{ path("get_directions_results_service_by_id",{"id":0}) }}";
-            directionResultURL="/"+directionResultURL.substring(directionResultURL.length-1,1);
-            console.log(directionResultURL);
 
+            var directionResultURL = "{{ path("get_directions_results_service_by_id",{"id":0}) }}";
+            directionResultURL = "/" + directionResultURL.substring(directionResultURL.length - 1, 1);
+            console.log(directionResultURL);
+            var directionEcartURL = "{{ path("ecart_directions",{"id":0}) }}";
+            directionEcartURL = "/" + directionEcartURL.substring(directionEcartURL.length - 1, 1);
+            console.log(directionEcartURL);
             for (var i = 0; i < directionsId.length; i++) {
-                tempBrandsData = [];
-                tempDrillDown = [];
+//            var i=0;
+
+//                var urlGlobal=directionResultURL + directionsId[i];
                 $.ajax({url: directionResultURL + directionsId[i]}).then(function (data) {
+                    var tempBrandsData = new Array();
+
+                    var tempDrillDown = new Array();
+                    var drillDownObj = {data: [], id: "", name: ""};
+                    var brandsDataObj = {
+                        drilldown: "",
+                        name: "",
+                        y: 0
+                    };
+                    console.log("data");
+                    console.log(data);
                     var compteur = 0;
                     var somme = 0;
+                    var last=false;
                     for (var j = 0; j < data.length; j++) {
+                        if(j==0){
+                            last=false;
+                        }
                         if (axeOld != data[j].axeLibelle) {
                             if (brandsDataObj.drilldown != "" && drillDownObj.data.length != 0) {
                                 if (compteur != 0) {
@@ -171,13 +181,19 @@
                     }
                     tempBrandsData.push(brandsDataObj);
                     tempDrillDown.push(drillDownObj);
-
+                    if(j==data.length){
+                        drilldownData.push(tempDrillDown);
+                        brandsData.push(tempBrandsData);
+                    }
+//                    drilldownData.push(tempDrillDown);
+//                    brandsData.push(tempBrandsData);
                 });
 
-                //affectation temp drilldown and brand data => big tableau
+                $.ajax({url: directionEcartURL+directionsId[i]}).then(function (data) {
+                    ecarts.push(data);
+                });
 
-                drilldownData.push(tempDrillDown);
-                brandsData.push(tempBrandsData);
+
 
             }
 
@@ -196,7 +212,14 @@
 
         /****************************Gestion de click pour les nav tabs **********************************************/
         $('.clickable').click(function () {
+
+
             var index = findPosition(directionsId, parseInt($(this).attr("data-id")));
+            console.log("ecarts");
+            console.log(ecarts);
+            console.log(ecarts[index]["red"]);
+            console.log(ecarts[index]["yello"]);
+            console.log(ecarts[index]["green"]);
             Highcharts.setOptions({
                 lang: {
                     drillUpText: '◁ {series.name}'
@@ -210,7 +233,7 @@
                     text: "Moyenne d'évaluation"
                 },
                 subtitle: {
-                    text: 'Direction DRHA'
+                    text: directionLibelle[index]
                 },
                 xAxis: {
                     type: 'category'
@@ -244,13 +267,13 @@
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>'
                 },
 
                 series: [{
                     name: 'Axes d\'évaluations',
                     colorByPoint: true,
-                    data: brandsData[index]
+                    data:  brandsData[index]
                 }],
                 drilldown: {
                     series: drilldownData[index]
@@ -292,9 +315,9 @@
                     type: 'pie',
                     name: 'Ecart',
                     data: [
-                        ['Rouge', 28.2],
-                        ['Jaune', 26.8],
-                        ['Vert', 45.0]
+                        ['  ', ecarts[index]["red"]],
+                        ['', ecarts[index]["yello"]],
+                        [' ', ecarts[index]["green"]]
                     ]
                 }]
             });

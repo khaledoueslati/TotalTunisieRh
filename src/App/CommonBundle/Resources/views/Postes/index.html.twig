@@ -1,0 +1,44 @@
+{% extends 'AppT360Bundle::BaseformPage.html.twig' %}
+
+{% block body -%}
+
+    <table id="poste-table" class="table table-hover table-bordered text-center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Libelle</th>
+                <th>Niveau</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><span class="badge">{{ entity.idPoste }}</span>
+
+                <td>{{ entity.libelle }}</td>
+                <td>{{ entity.niveau }}</td>
+                <td>
+                    <a data-href="{{ path('postes_edit', { 'id': entity.idPoste }) }}"
+                       class="btn btn-primary hvr-grow clickable-poste" data-toggle="modal"
+                       data-target="#edit_poste"><span
+                                class="fa fa-edit">&nbsp; Edit</span></a>
+
+                    <a href="{{ path('postes_delete', { 'id': entity.idPoste }) }}"
+                       class="btn btn-box-tool hvr-grow clickable" ><span
+                                class="fa fa-remove">&nbsp; Delete</span></a>
+                {#<ul>#}
+                    {#<li>#}
+                        {#<a href="{{ path('postes_show', { 'id': entity.idPoste }) }}">show</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<a href="{{ path('postes_edit', { 'id': entity.idPoste }) }}">edit</a>#}
+                    {#</li>#}
+                {#</ul>#}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

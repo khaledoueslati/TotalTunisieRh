@@ -296,9 +296,42 @@ class T360ReponsesController extends Controller
      */
     public function showResultsAction($idEval)
     {
-        $reponsegenerale = $this->container->get('t360reponse.service')->getReponsesNumberByEval($idEval);
+
+        $serializer = $this->container->get('jms_serializer');
+
+        $reponsegenerale = $this->container->get('t360reponse.service')->getReponsesByEvaluation($idEval);
+
+        $reponseSup = $this->container->get('t360reponse.service')->getSuperieurResponsesByEvaluation($idEval);
+        $reponseSubordonne = $this->container->get('t360reponse.service')->getSubordoneeResponsesByEvaluation($idEval);
+        $reponseAuto = $this->container->get('t360reponse.service')->getAutoResponsesByEvaluation($idEval);
+
+        $reponseCollegue=$this->container->get('t360reponse.service')->getColleguesResponsesByEvaluation($idEval);
+
+        $reponse = array("reponseGenerale" => $reponsegenerale, "reponseSubordonne" => $reponseSubordonne, "reponseSup" => $reponseSup, "reponseAuto" => $reponseAuto);
+//            echo $reponsegenerale[0]['average'];
+        for ($i = 0; $i < count($reponsegenerale); $i++) {
+            if (array_key_exists ( $i , $reponseSubordonne )){
+                $reponsegenerale[$i]["reponseSubordonne"] = $reponseSubordonne[$i]['average'];
+            }
+
+            if(array_key_exists ( $i , $reponseSup )){
+                $reponsegenerale[$i]["reponseSup"] = $reponseSup[$i]['average'];
+            }
+
+            if(array_key_exists ( $i , $reponseAuto )){
+                $reponsegenerale[$i]["reponseAuto"] = $reponseAuto[$i]['average'];
+            }
+            if(array_key_exists ( $i , $reponseCollegue )){
+                $reponsegenerale[$i]["reponseCollegue"] = $reponseCollegue[$i]['average'];
+            }
+        }
+
+        $responseGeneraleJson = $serializer->serialize($reponsegenerale, 'json');
+
+
+        $ReponsesNumber = $this->container->get('t360reponse.service')->getReponsesNumberByEval($idEval);
         $all = $this->container->get('employee.service')->getNumberPersonToEvaluate($idEval);
-        return array("idEval" => $idEval, "nombreDeReponse" => $reponsegenerale, "allPersonToEvaluate" => $all);
+        return array("idEval" => $idEval, "nombreDeReponse" => $ReponsesNumber, "allPersonToEvaluate" => $all,"reponseGenerale"=>$responseGeneraleJson);
     }
 
 
@@ -327,6 +360,40 @@ class T360ReponsesController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
+    /**
+     * @Route("/directions/service/ecart/{id}", name="ecart_directions")
+     */
+    public function getEcartByDirection($id){
+        $reponsegenerale = $this->container->get('t360reponse.service')->getReponsesByDirection_Generale($id);
+        $reponseAuto = $this->container->get('t360reponse.service')->getAutoResponsesByDirection_Auto($id);
+        $red=0;
+        $yello=0;
+        $green=0;
+
+        for ($i = 0; $i < count($reponsegenerale); $i++) {
+            if (array_key_exists ( $i , $reponseAuto )){
+               if($reponsegenerale[$i]['cin']==$reponseAuto[$i]['cin']) {
+                   $ecart= $reponsegenerale[$i]['average']-$reponseAuto[$i]['average'];
+                   if((-0.6<=$ecart & $ecart<=0) || (0<=$ecart & $ecart<=1.8)){
+                      $green=$green+1;
+                   }else if(($ecart< -0.6 & $ecart >=-2.2)|| ($ecart>1.8 & $ecart <=3.2 )){
+                       $yello=$yello+1;
+                   }else{
+                       $red=$red+1;
+                   }
+               }
+
+            }
+        }
+
+        $responseArray=array("yello"=>($yello/$i)*100,"red"=>($red/$i)*100,"green"=>($green/$i)*100 );
+         $serializer = $this->container->get('jms_serializer');
+        $response = new Response($serializer->serialize($responseArray, 'json'));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
 
     /**
      * @Route("/directions/results", name="get_directions_results")
@@ -414,7 +481,7 @@ class T360ReponsesController extends Controller
         $jsonResults = $request->getContent();
 //        $jsonResults = '[{"valeur":"2","id_eval":"3","id_question":"15","id_employee":"25363636"}]';
         $reponsesArray = $serializer->deserialize($jsonResults, 'Doctrine\Common\Collections\ArrayCollection', 'json');
-//        $this->get("t360reponse.service")->saveReponses($reponsesArray);
+        $this->get("t360reponse.service")->saveReponses($reponsesArray);
 
 
         return new Response(1);

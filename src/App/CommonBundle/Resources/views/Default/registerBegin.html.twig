@@ -1,0 +1,44 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Login Total RH{% endblock %}
+
+
+{% block body %}
+
+    <div class="box box-body box-primary center-block">
+        <div id="to-be-replaced">
+            <label for="#cin"> cin</label>
+            <input type="number" name="cin" id="cin" placeholder="cin"/><br/><br/><br/>
+            <a class="btn btn-primary center-block clickable" href="#">Verifier</a>
+        </div>
+        <div class="overlay" id="overlay" hidden="hidden">
+        <i class="fa fa-refresh fa-spin"></i>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+ {% block javascripts %}
+     <script>
+         $(function () {
+         var url="{{ path("employees_register",{'id':0}) }}";
+         url=url.substr(0,url.length-1);
+
+         $(".clickable").click(function () {
+             $("#overlay").show()
+         var tempUrl=url+$("#cin").val();
+         console.log(tempUrl);
+         $.ajax({url: tempUrl }).then(function (data) {
+             console.log(data);
+             $("#overlay").hide();
+             $("#to-be-replaced").html("");
+         $("#to-be-replaced").html(data);
+         });
+         })
+         })
+
+
+     </script>
+ {% endblock %}

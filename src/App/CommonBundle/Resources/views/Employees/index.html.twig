@@ -1,7 +1,7 @@
 {% extends 'AppT360Bundle::BasePage.html.twig' %}
 
 {% block headerName %}
-    <h1>Employees list</h1>
+    <h1>Liste des employés</h1>
 {% endblock %}
 {% block body -%}
     <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
@@ -10,7 +10,19 @@
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/dataTables.bootstrap.js') }}"></script>
 
     <script type="text/javascript">
+
         $(function () {
+
+            $(".clickable").click(function () {
+                $("#edit-employee-body").html("");
+                $.ajax({url: $(this).attr("data-href")}).then(function (data) {
+
+                    $("#edit-employee-body").html(data);
+                });
+            })
+        })
+        $(function () {
+
             $("#employees_table").dataTable();
 
         });
@@ -30,7 +42,8 @@
             </div>
             <!-- /.info-box -->
         </div>
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12" data-toggle="modal"
+             data-target="#new_direction">
             <div class="info-box hvr-grow">
                 <span class="info-box-icon bg-aqua"><i class="fa fa-plus"></i></span>
 
@@ -42,7 +55,8 @@
             </div>
             <!-- /.info-box -->
         </div>
-        <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12" data-toggle="modal"
+             data-target="#new_poste">
             <div class="info-box hvr-grow">
                 <span class="info-box-icon bg-yellow"><i class="fa fa-plus"></i></span>
 
@@ -72,18 +86,24 @@
             <tbody>
             {% for entity in entities %}
                 <tr>
-                    <td><a href="{{ path('employees_show', { 'id': entity.cin }) }}">{{ entity.cin }}</a></td>
+                    <td>
+                        <span class="badge">{{ entity.cin }}</span></td>
                     <td>{{ entity.nom }}</td>
                     <td>{{ entity.prenom }}</td>
                     <td>{{ entity.email }}</td>
-                    <td>{{ entity.dateEmbauche }}</td>
+                    <td>{{ entity.dateEmbauche|date('Y-m-d') }}</td>
                     <td>{{ entity.sexe }}</td>
                     <td>{{ entity.username }}
                     </td>
                     <td>
                         <a data-href="{{ path('employees_edit', { 'id': entity.cin }) }}"
-                           class="btn btn-primary hvr-grow"><span
+                           class="btn btn-primary hvr-grow clickable" data-toggle="modal"
+                           data-target="#edit_employee"><span
                                     class="fa fa-edit">&nbsp; Edit</span></a>
+
+                        <a href="{{ path('employees_delete', { 'id': entity.cin }) }}"
+                           class="btn btn-box-tool hvr-grow clickable" ><span
+                                    class="fa fa-remove">&nbsp; Delete</span></a>
                         {#<ul>#}
                         {#<li>#}
                         {#<a href="{{ path('employees_show', { 'id': entity.cin }) }}">show</a>#}
@@ -118,4 +138,60 @@
         </div>
     </div>
 
+    <div class="modal fade " id="edit_employee" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Employée</h3>
+
+                    <div class="modal-body" id="edit-employee-body">
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="new_direction" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajouter direction</h3>
+
+                    <div class="modal-body">
+                        {{ render(controller('AppCommonBundle:Directions:new')) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="new_poste" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajouter poste</h3>
+
+                    <div class="modal-body">
+                        {{ render(controller('AppCommonBundle:Postes:new')) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

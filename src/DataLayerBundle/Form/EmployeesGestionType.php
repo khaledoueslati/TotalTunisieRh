@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EmployeesType extends AbstractType
+class EmployeesGestionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,21 +15,22 @@ class EmployeesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cin')
-            ->add('nom')
-            ->add('prenom')
-//            ->add('email')
-            ->add('dateEmbauche','date', array(
-                'years' => range(date('Y') - 50, date('Y') + 2) ))
-            ->add('sexe', 'choice', array(
-                'choices'   => array('male' => 'Masculin', 'female' => 'Féminin'),
-                'required'  => false,
-            ))
-//            ->add('username')
-            ->add('poste', new DirectionsPostesType())
-
-            ->add('role')
-            ->add('supHierarchique')
+            ->add('cin','integer',array("disabled"=>true))
+            ->add('nom','text',array("disabled"=>true))
+            ->add('prenom','text',array("disabled"=>true))
+            ->add('email')
+//            ->add('dateEmbauche','date', array(
+//                'years' => range(date('Y') - 50, date('Y') + 2) ))
+//            ->add('sexe', 'choice', array(
+//                'choices'   => array('male' => 'Masculin', 'female' => 'Féminin'),
+//                'required'  => false,
+//            ))
+            ->add('username')
+            ->add('password','password')
+//            ->add('poste', new DirectionsPostesType())
+//
+//            ->add('role')
+//            ->add('supHierarchique')
         ;
     }
 

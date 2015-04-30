@@ -1,0 +1,26 @@
+{% extends 'AppT360Bundle::BaseformPage.html.twig' %}
+
+{% block title %}Register Total RH{% endblock %}
+
+
+{% block body %}
+
+    {% if message==0 %}
+        <div class="error-page text-red"><h4><span class="fa fa-exclamation-triangle"></span> le CIN donnée n'est pas
+                dans a base</h4> verifiez le cin introduit
+        </div>
+    {% elseif message==1 %}
+        <div class="error-page text-red"><h4><span class="fa fa-smile-o"></span> Vous etes déja inscrit</h4> veuillez
+            vous authentifier
+        </div>
+    {% else %}
+        <div class="error-page text-red"><h4><span class="fa fa-smile-o"></span> Le nom d'utilisateur choisit est déja existant</h4> veuillez
+            le modifier
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+ {% block javascripts %}
+
+ {% endblock %}

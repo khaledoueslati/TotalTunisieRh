@@ -61,7 +61,17 @@ class GestionT360Reponses
 
     public function getColleguesResponsesByEvaluation($idEval)
     {
-        //a remplir plus tard car manque de donnée dans la base
+        $query = $this->EntityManager->createQuery("select IDENTITY (reponse.idQuestion) as idQuestion, question.enonce ,avg(reponse.valeur ) as average
+                                                    from DataLayerBundle:T360Reponses reponse, DataLayerBundle:T360Questions question, DataLayerBundle:T360Evaluations evaluation,DataLayerBundle:Employees employee,DataLayerBundle:Employees employeeCollegue
+                                                    WHERE   reponse.idEval=$idEval  And
+                                                            reponse.idQuestion=question.id and
+                                                            reponse.idEval=evaluation.idEvaluation AND
+                                                            evaluation.cinEvalue=employee.cin AND
+                                                            reponse.idEmployee=employeeCollegue.cin AND
+                                                            employeeCollegue.supHierarchique=employee.supHierarchique
+                                                    GROUP By reponse.idQuestion");
+
+        return $query->getResult();
     }
 
     public function getDirectionsResults()
@@ -192,7 +202,7 @@ class GestionT360Reponses
         return $query->getResult();
 
     }
-
+    /*****************************************---******************************************************/
     public function saveReponses($reponsesArray)
     {
         foreach ($reponsesArray as $reponse) {
@@ -211,4 +221,39 @@ class GestionT360Reponses
             }
         }
     }
+
+    public function getReponsesByDirection_Generale($idDirection)
+    {
+        $query = $this->EntityManager->createQuery("select  avg(reponse.valeur ) as average ,employee.cin
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:Employees employee, DataLayerBundle:DirectionsPostes dp, DataLayerBundle:Directions dir , DataLayerBundle:T360Evaluations evaluation
+                                                    WHERE reponse.idEval=evaluation.idEvaluation AND
+                                                          evaluation.cinEvalue = employee.cin AND
+                                                          employee.poste=dp.idDirectionPostes AND
+                                                          dp.Direction=$idDirection
+
+                                                    GROUP BY employee.cin
+                                                     ORDER BY employee.cin
+                                                    ");
+
+        return $query->getResult();
+    }
+
+    public function getAutoResponsesByDirection_Auto($idDirection)
+    {
+        $query = $this->EntityManager->createQuery("select avg(reponse.valeur ) as average ,employee.cin
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:Employees employee, DataLayerBundle:DirectionsPostes dp, DataLayerBundle:Directions dir , DataLayerBundle:T360Evaluations evaluation
+                                                    WHERE reponse.idEval=evaluation.idEvaluation AND
+                                                          evaluation.cinEvalue = employee.cin AND
+                                                          employee.poste=dp.idDirectionPostes AND
+                                                          dp.Direction=dir.idDirection AND
+                                                          dir.idDirection=$idDirection AND
+                                                          reponse.idEmployee=employee.cin
+
+                                                    GROUP BY employee.cin
+                                                     ORDER BY employee.cin
+                                                    ");
+
+        return $query->getResult();
+    }
+
 } 

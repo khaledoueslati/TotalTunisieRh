@@ -63,7 +63,10 @@ class GestionEmployee
         $id_direction = $person->getPoste()->getDirection()->getIdDirection();
         $niveauPoste = $person->getPoste()->getPoste()->getNiveau();
         $Superieur = $person->getSupHierarchique();
-        $cin_sup = $Superieur->getCin();
+
+        if($Superieur){
+            $cin_sup = $Superieur->getCin();
+        }
 
         if (!$Superieur) {
             //le cas du DG return toute les personne ayant comme superieur hierarchique $cin +1 (auto eval)

@@ -1,0 +1,237 @@
+{% extends 'AppT360Bundle::BasePage.html.twig' %}
+
+{#{% block title %}AppCommonBundle:DirectionPostes:index{% endblock %}#}
+  {% block headerName %}
+      <h1>Direction Postes Menu.</h1>
+  {% endblock %}
+{% block body %}
+    <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/AppT360/js/dataTables.bootstrap.js') }}"></script>
+    <script>
+        $(function () {
+
+            $("#table-direction").dataTable();
+            $("#poste-table").dataTable();
+        });
+    </script>
+    <br/><br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="directions" class="box box-body box-danger">
+                    <div class="box-header">
+                        <h3 class="box-title">Liste des directions</h3>
+                        <a class="btn btn-primary pull-right" href="#" data-toggle="modal"
+                           data-target="#new_direction">Ajouter Direction</a>
+                        <hr/>
+                    </div>
+                    <div class="box-body">
+                        <table id="table-direction" class="table table-hover table-bordered text-center">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Libelle</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for direction in directions %}
+                                <tr>
+                                    <td>
+                                        <span class="badge">{{ direction.idDirection }}</span></td>
+                                    <td>{{ direction.libelle }}</td>
+                                    <td>
+                                        <a data-href="{{ path('directions_edit', { 'id': direction.idDirection }) }}"
+                                           class="btn btn-primary hvr-grow clickable" data-toggle="modal"
+                                           data-target="#edit_direction"><span
+                                                    class="fa fa-edit">&nbsp; Edit</span></a>
+
+                                        <a href="{{ path('directions_delete', { 'id': direction.idDirection }) }}"
+                                           class="btn btn-box-tool hvr-grow clickable"
+                                                ><span
+                                                    class="fa fa-remove">&nbsp; Delete</span></a>
+                                        {#<ul>#}
+                                        {#<li>#}
+                                        {#<a href="{{ path('directions_show', { 'id': direction.idDirection }) }}">show</a>#}
+                                        {#</li>#}
+                                        {#<li>#}
+                                        {#<a href="{{ path('directions_edit', { 'id': direction.idDirection }) }}">edit</a>#}
+                                        {#</li>#}
+                                        {#</ul>#}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+                <div class="row">
+                    <div id="postes" class="box box-danger">
+                        <div class="box-header">
+                            <div class="btn-group pull-right">
+
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#" id="dropdown-button-tri">Trié par direction</a></li>
+                                    <li><a href="#" id="dropdown-button">Tout les postes</a></li>
+                                </ul>
+                            </div>
+                            <a class="btn btn-primary pull-right" href="#" data-toggle="modal"
+                               data-target="#new_poste">Ajouter poste</a>
+
+                            <h3 class="box-title">Liste des Postes</h3>
+                            <hr/>
+                        </div>
+                        <div class="box-body">
+                            <div id="ordered-poste">
+                                {{ render(controller('AppCommonBundle:Postes:indexByDirection')) }}
+                            </div>
+                            <div id="all-poste">
+                                {{ render(controller('AppCommonBundle:Postes:index')) }}
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade " id="edit_direction" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Direction</h3>
+
+                    <div class="modal-body" id="edit-direction-body">
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="new_direction" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajouter direction</h3>
+
+                    <div class="modal-body">
+                        {{ render(controller('AppCommonBundle:Directions:new')) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="new_poste" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Ajouter poste</h3>
+
+                    <div class="modal-body">
+                        {{ render(controller('AppCommonBundle:Postes:new')) }}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="edit_poste" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit Poste</h3>
+
+                    <div class="modal-body" id="edit-poste-body">
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="btn btn-danger" data-dismiss="modal">Annuler</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $(".clickable-poste").click(function () {
+                $("#edit-poste-body").html("");
+                $.ajax({url: $(this).attr("data-href")}).then(function (data) {
+                    $("#edit-poste-body").html(data);
+                });
+            });
+        })
+    </script>
+    <script>
+        $(function () {
+            $(".clickable").click(function () {
+                $("#edit-direction-body").html("");
+                $.ajax({url: $(this).attr("data-href")}).then(function (data) {
+                    $("#edit-direction-body").html(data);
+                });
+            });
+        })
+    </script>
+    <script>
+        $(function () {
+            $("#all-poste").toggle();
+            $('#dropdown-button-tri').click(function () {
+                if($("#all-poste").is(":visible")){
+                    $("#all-poste").fadeOut( "slow", function () {
+                        $("#ordered-poste").toggle();
+                    });
+
+                }
+
+
+
+//                $("#ordered-poste").show();
+
+            });
+
+            $('#dropdown-button').click(function () {
+
+                if($("#ordered-poste").is(":visible")){
+                    $("#ordered-poste").fadeOut( "slow", function () {
+                        $("#all-poste").toggle();
+                    });
+
+                }
+            })
+        })
+    </script>
+{% endblock %}

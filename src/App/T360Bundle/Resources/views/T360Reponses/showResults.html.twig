@@ -20,142 +20,144 @@
         var ReponseCollegue = [];
         var table_data = [];
 
-        $.ajax({
-            url: "{{ path('get_reponses_by_eval',{ 'idEval': idEval }) }}"
-        }).then(function (data) {
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].average) {
-                    ReponseGenerale.push(parseFloat(data[i].average));
-                }
-                if (data[i].reponseSubordonne) {
-                    ReponseSub.push(parseFloat(data[i].reponseSubordonne));
-                }
+        var data=JSON.parse($("#data").text());
+        $("#data").remove();
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].average) {
+                ReponseGenerale.push(parseFloat(data[i].average));
+            }
+            if (data[i].reponseSubordonne) {
+                ReponseSub.push(parseFloat(data[i].reponseSubordonne));
+            }
 
-                if (data[i].reponseAuto) {
-                    ReponseAuto.push(parseInt(data[i].reponseAuto));
-                }
-                if (data[i].reponseCollegue) {
-                    ReponseCollegue.push(parseFloat(data[i].reponseCollegue));
-                }
-                if (data[i].reponseSup) {
-                    ReponseSup.push(parseInt(data[i].reponseSup));
-                }
-                if (data[i].enonce) {
-                    axis.push(data[i].enonce)
-                }
+            if (data[i].reponseAuto) {
+                ReponseAuto.push(parseInt(data[i].reponseAuto));
+            }
+            if (data[i].reponseCollegue) {
+                ReponseCollegue.push(parseFloat(data[i].reponseCollegue));
+            }
+            if (data[i].reponseSup) {
+                ReponseSup.push(parseInt(data[i].reponseSup));
+            }
+            if (data[i].enonce) {
+                axis.push(data[i].enonce)
+            }
 
-            };
-console.log(11111);
-            console.log(ReponseAuto);
-            $(function () {
+        };
 
-                $('#containerSpider').highcharts({
+        $(function () {
 
-                    chart: {
-                        polar: true,
-                        type: 'line',
-                        height: 500
+            $('#containerSpider').highcharts({
 
-                    },
+                chart: {
+                    polar: true,
+                    type: 'line',
+                    height: 500
 
-
-                    //      colors: ['#FF0000', '#434348', '#90ed7d'],
-                    title: {
-                        text: 'Synthèse évaluation 360'
-
-                    },
+                },
 
 
-                    pane: {
-                        size: '90%'
-                    },
+                //      colors: ['#FF0000', '#434348', '#90ed7d'],
+                title: {
+                    text: 'Synthèse évaluation 360'
 
-                    xAxis: {
-                        categories: axis,
-                        tickmarkPlacement: 'on',
-                        lineWidth: 0
-                    },
+                },
 
-                    yAxis: {
-                        gridLineInterpolation: 'polygon',
-                        lineWidth: 0,
-                        min: 0
-                    },
-                    exporting: {
-                        enabled: false
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series: [{
-                        name: 'Generale',
-                        data: ReponseGenerale,
-                        pointPlacement: 'on'
-                    }, {
-                        name: 'Subordones',
-                        data: ReponseSub,
-                        pointPlacement: 'on'
-                    }, {
-                        name: 'Auto Evaluation',
-                        data: ReponseAuto,
-                        pointPlacement: 'on'
-                    }, {
-                        name: 'Collegues',
-                        data: ReponseCollegue,
-                        pointPlacement: 'on'
-                    }, {
-                        name: 'Superieur Hierarchique',
-                        data: ReponseSup,
-                        pointPlacement: 'on'
-                    }]
 
-                });
-                $('#containerLine').highcharts({
-                    title: {
-                        text: 'Synthèse évaluation 360'
-                    },
-                    xAxis: {
-                        categories: axis
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Evaluations '
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
-                    },
+                pane: {
+                    size: '90%'
+                },
 
-                    credits: {
-                        enabled: false
-                    },
-                    series: [{
-                        name: 'Generale',
-                        data: ReponseGenerale
+                xAxis: {
+                    categories: axis,
+                    tickmarkPlacement: 'on',
+                    lineWidth: 0
+                },
 
-                    }, {
-                        name: 'Subordones',
-                        data: ReponseSub
+                yAxis: {
+                    gridLineInterpolation: 'polygon',
+                    lineWidth: 0,
+                    min: 0
+                },
+                exporting: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Generale',
+                    data: ReponseGenerale,
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Subordones',
+                    data: ReponseSub,
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Auto Evaluation',
+                    data: ReponseAuto,
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Collegues',
+                    data: ReponseCollegue,
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Superieur Hierarchique',
+                    data: ReponseSup,
+                    pointPlacement: 'on'
+                }]
 
-                    }, {
-                        name: 'Auto Evaluation',
-                        data: ReponseAuto
-
-                    }, {
-                        name: 'Collegues',
-                        data: ReponseCollegue
-
-                    }, {
-                        name: 'Superieur Hierarchique',
-                        data: ReponseSup
-
-                    }]
-                });
             });
+            $('#containerLine').highcharts({
+                title: {
+                    text: 'Synthèse évaluation 360'
+                },
+                xAxis: {
+                    categories: axis
+                },
+                yAxis: {
+                    title: {
+                        text: 'Evaluations '
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
 
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Generale',
+                    data: ReponseGenerale
+
+                }, {
+                    name: 'Subordones',
+                    data: ReponseSub
+
+                }, {
+                    name: 'Auto Evaluation',
+                    data: ReponseAuto
+
+                }, {
+                    name: 'Collegues',
+                    data: ReponseCollegue
+
+                }, {
+                    name: 'Superieur Hierarchique',
+                    data: ReponseSup
+
+                }]
+            });
         });
+        {#$.ajax({#}
+            {#url: "{{ path('get_reponses_by_eval',{ 'idEval': idEval }) }}"#}
+        {#}).then(function (data) {           #}
+
+        {#});#}
         // chargement des données dans le tableau de details
 
 
@@ -171,14 +173,15 @@ console.log(11111);
                     var i = 0;
                     var offset = 0;
                     var compteur = 0;
+                    var sommeEcart=0;
                     for (var j = 0; j < data.length; j++) {
                         var sommeAuto = 0;
                         var sommeSub = 0;
                         var sommeSup = 0;
                         var sommeCollegue = 0;
-                        console.log("***********j=" + j);
+//                        console.log("***********j=" + j);
                         var testVariable = parseInt(data[j].QuestionCount) + offset;
-                        console.log(testVariable);
+
                         for (i; i < testVariable; i++) {
                             console.log("i=" + i);
                             sommeAuto += ReponseAuto[i];
@@ -187,21 +190,31 @@ console.log(11111);
                             sommeSup += ReponseSup[i];
                         }
                         offset = i;
-                        console.log("auto : " + sommeAuto + " Collegue :" + sommeCollegue + " subordonée : " + sommeSub + " superieur : " + sommeSup);
+//                        console.log("auto : " + sommeAuto + " Collegue :" + sommeCollegue + " subordonée : " + sommeSub + " superieur : " + sommeSup);
                         var moyenne = (sommeAuto + sommeCollegue + sommeSub + sommeSup) / 4;
-                        $("#table-to-fill").append(' <div class="row bg-info">  ' +
-                        '<div class="col-lg-4"><h5 class="text-center ">' + data[j].libelle + '</h5></div>' +
-                        ' <div class="col-lg-1">' +
-                        '<h5 class="text-center ">' + sommeCollegue + '</h5></div>' +
-                        '<div class="col-lg-2">' +
-                        '<h5 class="text-center">' + sommeSup + '</h5>' +
-                        '</div><div class="col-lg-1">' +
-                        '<h5 class="text-center">' + sommeAuto + '</h5></div>' +
-                        '<div class="col-lg-1"><h5 class="text-center">' + sommeSub + '</h5>' +
-                        '</div><div class="col-lg-1">' +
-                        '<h5 class="text-center">' + moyenne + '</h5></div>' +
-                        '<div class="col-lg-1"><h5 class="text-center">' + Math.abs(moyenne - sommeAuto) + '</h5>' +
-                        ' </div>');
+                        var rowToFill=' <div class="row bg-info">  ' +
+                                '<div class="col-lg-4"><h5 class="text-center ">' + data[j].libelle + '</h5></div>' +
+                                ' <div class="col-lg-1">' +
+                                '<h5 class="text-center ">' + sommeCollegue + '</h5></div>' +
+                                '<div class="col-lg-2">' +
+                                '<h5 class="text-center">' + sommeSup + '</h5>' +
+                                '</div><div class="col-lg-1">' +
+                                '<h5 class="text-center">' + sommeAuto + '</h5></div>' +
+                                '<div class="col-lg-1"><h5 class="text-center">' + sommeSub + '</h5>' +
+                                '</div><div class="col-lg-1">' +
+                                '<h5 class="text-center">' + moyenne + '</h5></div>';
+                        var ecart= moyenne - sommeAuto ;
+                        sommeEcart+=ecart;
+//                        ecart = 5;
+                        if((-0.6<=ecart & ecart<=0) || (0<=ecart & ecart<=1.8)){
+                            rowToFill+='<div class="col-lg-1 bg-green"><h5 class="text-center">' +ecart+ '</h5>';
+                        }else if((ecart< -0.6 & ecart >=-2.2)|| (ecart>1.8 & ecart <=3.2 )){
+                            rowToFill+='<div class="col-lg-1 bg-yellow"><h5 class="text-center">' + ecart+ '</h5>';
+                        }else{
+                            rowToFill+='<div class="col-lg-1 bg-red"><h5 class="text-center">' + ecart + '</h5>';
+                        }
+                            rowToFill+=' </div>';
+                        $("#table-to-fill").append(rowToFill);
 
                         for (compteur; compteur < testVariable; compteur++) {
                             $("#table-to-fill").append(' <div class="row">  ' +
@@ -219,6 +232,20 @@ console.log(11111);
                         }
                     }
 
+                    var endRow='';
+                    var moyenneEcartGeneral=sommeEcart/data.length;
+                    if(-0.6<=moyenneEcartGeneral<=0 || (0<=moyenneEcartGeneral & moyenneEcartGeneral<=1.8)){
+                        endRow='<div class="row bg-green">';
+                        endRow+='<div class="pull-right" >Ecart General :&nbsp;&nbsp; '+moyenneEcartGeneral+'&nbsp;&nbsp;&nbsp;</div>';
+                    }else if((moyenneEcartGeneral< -0.6 & moyenneEcartGeneral >=-2.2)|| (moyenneEcartGeneral>1.8 & moyenneEcartGeneral <=3.2 )){
+                        endRow='<div class="row bg-yellow">';
+                        endRow+='<div class="pull-right">Ecart General : &nbsp;&nbsp; '+moyenneEcartGeneral+'&nbsp;&nbsp;&nbsp;</div>';
+                    }else{
+                        endRow='<div class="row bg-red">';
+                        endRow+='<div class="pull-right">Ecart General :&nbsp;&nbsp; '+moyenneEcartGeneral+'&nbsp;&nbsp;&nbsp;</div>';
+                    }
+                    endRow+='</div>';
+                    $("#table-to-fill").append(endRow);
                 });
             }
         });
@@ -313,5 +340,9 @@ console.log(11111);
             <!-- /linear schema -->
 
         </div>
+    </div>
+
+    <div id="data" hidden="hidden">
+        {{ reponseGenerale }}
     </div>
 {% endblock %}
