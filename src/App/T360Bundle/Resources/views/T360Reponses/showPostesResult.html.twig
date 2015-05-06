@@ -18,18 +18,18 @@
 
 
         var axes = [];
-        var direction = [];
+        var poste = [];
         var valeurs = [];
         var dataObj = [];
-        var directionsId = [];
-        var directionLibelle=[];
+        var posteId = [];
+        var posteLibelle=[];
         var ecarts=[];
         /***********************************Donnes specifique aux directions*********************************/
         var brandsData = [];
         var drilldownData = [];
         /***********************************appel AJAX*********************************/
         $.ajax({
-            url: "{{ path('get_directions_results_service') }}"
+            url: "{{ path('get_postes_results_service') }}"
         }).then(function (data) {
 
             var oldDirection = "";
@@ -41,7 +41,7 @@
             for (var i = 0; i < data.length; i++) {
                 axes.push(data[i].questionEnonce);
 
-                if (oldDirection != data[i].directionLibelle) {
+                if (oldDirection != data[i].posteLibelle) {
                     if (temp.data.length > 0) {
                         dataObj.push(temp);
                     }
@@ -49,18 +49,18 @@
                         name: '',
                         data: []
                     };
-                    temp.name = data[i].directionLibelle;
-                    oldDirection = data[i].directionLibelle;
+                    temp.name = data[i].posteLibelle;
+                    oldDirection = data[i].posteLibelle;
                     temp.data.push(parseFloat(data[i].moyenne));
-                    directionsId.push(parseInt(data[i].idDirection));
-                    directionLibelle.push(data[i].directionLibelle);
+                    posteId.push(parseInt(data[i].idPoste));
+                    posteLibelle.push(data[i].posteLibelle);
                 } else {
                     temp.data.push(parseFloat(data[i].moyenne));
                 }
 
             }
             dataObj.push(temp);
-            /***********************emulation de la 2em Direction*****************************/
+            /***********************emulation de la 2em poste*****************************/
 //
             console.log(dataObj);
 
@@ -113,20 +113,20 @@
 //            var tempBrandsData = [];
 //            var tempDrillDown = [];
 
-//                var idDirectionOld = 0;
+//                var idPosteOld = 0;
             var axeOld = "";
 
-            var directionResultURL = "{{ path("get_directions_results_service_by_id",{"id":0}) }}";
+            var directionResultURL = "{{ path("get_postes_results_service_by_id",{"id":0}) }}";
             directionResultURL = "/" + directionResultURL.substring(directionResultURL.length - 1, 1);
             console.log(directionResultURL);
-            var directionEcartURL = "{{ path("ecart_directions",{"id":0}) }}";
+            var directionEcartURL = "{{ path("ecart_postes",{"id":0}) }}";
             directionEcartURL = "/" + directionEcartURL.substring(directionEcartURL.length - 1, 1);
             console.log(directionEcartURL);
-            for (var i = 0; i < directionsId.length; i++) {
+            for (var i = 0; i < posteId.length; i++) {
 //            var i=0;
 
-//                var urlGlobal=directionResultURL + directionsId[i];
-                $.ajax({url: directionResultURL + directionsId[i]}).then(function (data) {
+//                var urlGlobal=directionResultURL + posteId[i];
+                $.ajax({url: directionResultURL + posteId[i]}).then(function (data) {
                     var tempBrandsData = new Array();
 
                     var tempDrillDown = new Array();
@@ -189,7 +189,7 @@
 //                    brandsData.push(tempBrandsData);
                 });
 
-                $.ajax({url: directionEcartURL+directionsId[i]}).then(function (data) {
+                $.ajax({url: directionEcartURL+posteId[i]}).then(function (data) {
                     ecarts.push(data);
                 });
 
@@ -214,12 +214,12 @@
         $('.clickable').click(function () {
 
 
-            var index = findPosition(directionsId, parseInt($(this).attr("data-id")));
-            console.log("ecarts");
-            console.log(ecarts);
-            console.log(ecarts[index]["red"]);
-            console.log(ecarts[index]["yello"]);
-            console.log(ecarts[index]["green"]);
+            var index = findPosition(posteId, parseInt($(this).attr("data-id")));
+//            console.log("ecarts");
+//            console.log(ecarts);
+//            console.log(ecarts[index]["red"]);
+//            console.log(ecarts[index]["yello"]);
+//            console.log(ecarts[index]["green"]);
             Highcharts.setOptions({
                 lang: {
                     drillUpText: '◁ {series.name}'
@@ -233,7 +233,7 @@
                     text: "Moyenne d'évaluation"
                 },
                 subtitle: {
-                    text: directionLibelle[index]
+                    text: posteLibelle[index]
                 },
                 xAxis: {
                     type: 'category'
@@ -280,6 +280,44 @@
                 }
             });
 
+//            $('#pie-chart').highcharts({
+//                chart: {
+//                    plotBackgroundColor: null,
+//                    plotBorderWidth: null,
+//                    plotShadow: false
+//                },
+//                colors: ['#ED1A3B', '#F8981D', '#33CC00'],
+//                lang: {
+//                  noData : "Pas de données reçu"
+//                },
+//                title: {
+//                    text: "Pourcentage d'ecart des évaluations"
+//                },
+//                plotOptions: {
+//                    pie: {
+//                        allowPointSelect: true,
+//                        cursor: 'pointer',
+//                        dataLabels: {
+//                            enabled: true,
+//                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+//                            style: {
+//                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+//                            }
+//                        }
+//                    }
+//                },
+//                credits: {
+//                    enabled: false
+//                },
+//                series: [{
+//                    type: 'pie',
+//                    name: 'Ecart',
+//                    data: []
+//                }]
+//            });
+
+
+
             $('#pie-chart').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -291,10 +329,13 @@
                 },
 
                 colors: ['#ED1A3B', '#F8981D', '#33CC00'],
-
+                lang: {
+                  noData : "Pas de données reçu"
+                },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                 },
+
                 plotOptions: {
                     pie: {
                         allowPointSelect: true,
@@ -314,7 +355,7 @@
                 series: [{
                     type: 'pie',
                     name: 'Ecart',
-                    data: []
+                    data: [ ]
                 }]
             });
             var chart = $('#pie-chart').highcharts();
@@ -332,9 +373,9 @@
     <div class="box">
         <div class="nav-tabs-custom nav">
             <ul class="nav nav-tabs ">
-                {% for direction in directions %}
-                    <li><a href="#chart-section" class="clickable" data-id="{{ direction.idDirection }}"
-                           data-toggle="tab">{{ direction.libelle }}</a></li>
+                {% for poste in postes %}
+                    <li><a href="#chart-section" class="clickable" data-id="{{ poste.idPoste }}"
+                           data-toggle="tab">{{ poste.libelle }}</a></li>
                 {% endfor %}
 
             </ul>

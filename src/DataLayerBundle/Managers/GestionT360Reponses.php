@@ -88,6 +88,20 @@ class GestionT360Reponses
         return $query->getResult();
     }
 
+    public function getPostesResults()
+    {
+        $query = $this->EntityManager->createQuery("Select poste.idPoste as idPoste,poste.libelle as posteLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne
+                                                    from DataLayerBundle:T360Questions question , DataLayerBundle:T360Reponses reponse ,DataLayerBundle:Postes poste , DataLayerBundle:DirectionsPostes dp , DataLayerBundle:Employees employee , DataLayerBundle:T360Evaluations eval
+                                                    WHERE reponse.idEval=eval.idEvaluation AND
+                                                          eval.cinEvalue=employee.cin AND
+                                                          dp.idDirectionPostes=employee.poste AND
+                                                          poste.idPoste=dp.Poste AND
+                                                          reponse.idQuestion=question.id
+                                                          GROUP BY poste.idPoste , reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
     public function getDirectionsResultsById($idDirection)
     {
         $query = $this->EntityManager->createQuery("Select direction.idDirection as idDirection,direction.libelle as directionLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne, axe.libelle as axeLibelle
@@ -98,6 +112,22 @@ class GestionT360Reponses
                                                           direction.idDirection=dp.Direction AND
                                                           reponse.idQuestion=question.id AND
                                                           direction.idDirection=$idDirection AND
+                                                          axe.id=question.idAxe
+                                                          GROUP BY axe.libelle,reponse.idQuestion");
+
+        return $query->getResult();
+    }
+
+    public function getPostesResultsById($idPoste)
+    {
+        $query = $this->EntityManager->createQuery("Select poste.idPoste as idPoste,poste.libelle as posteLibelle, question.enonce as questionEnonce, AVG (reponse.valeur) as moyenne, axe.libelle as axeLibelle
+                                                    from DataLayerBundle:T360Questions question , DataLayerBundle:T360Reponses reponse ,DataLayerBundle:Postes poste , DataLayerBundle:DirectionsPostes dp , DataLayerBundle:Employees employee , DataLayerBundle:T360Evaluations eval,DataLayerBundle:T360Axes axe
+                                                    WHERE reponse.idEval=eval.idEvaluation AND
+                                                          eval.cinEvalue=employee.cin AND
+                                                          dp.idDirectionPostes=employee.poste AND
+                                                          poste.idPoste=dp.Poste AND
+                                                          reponse.idQuestion=question.id AND
+                                                          poste.idPoste=$idPoste AND
                                                           axe.id=question.idAxe
                                                           GROUP BY axe.libelle,reponse.idQuestion");
 
@@ -238,6 +268,22 @@ class GestionT360Reponses
         return $query->getResult();
     }
 
+    public function getReponsesByPostes_Generale($idPoste)
+    {
+        $query = $this->EntityManager->createQuery("select  avg(reponse.valeur ) as average ,employee.cin
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:Employees employee, DataLayerBundle:DirectionsPostes dp, DataLayerBundle:Postes poste , DataLayerBundle:T360Evaluations evaluation
+                                                    WHERE reponse.idEval=evaluation.idEvaluation AND
+                                                          evaluation.cinEvalue = employee.cin AND
+                                                          employee.poste=dp.idDirectionPostes AND
+                                                          dp.Poste=$idPoste
+
+                                                    GROUP BY employee.cin
+                                                     ORDER BY employee.cin
+                                                    ");
+
+        return $query->getResult();
+    }
+
     public function getAutoResponsesByDirection_Auto($idDirection)
     {
         $query = $this->EntityManager->createQuery("select avg(reponse.valeur ) as average ,employee.cin
@@ -255,5 +301,21 @@ class GestionT360Reponses
 
         return $query->getResult();
     }
+    public function getAutoResponsesByPoste_Auto($idPoste)
+    {
+        $query = $this->EntityManager->createQuery("select avg(reponse.valeur ) as average ,employee.cin
+                                                    from DataLayerBundle:T360Reponses reponse,DataLayerBundle:Employees employee, DataLayerBundle:DirectionsPostes dp, DataLayerBundle:Postes poste , DataLayerBundle:T360Evaluations evaluation
+                                                    WHERE reponse.idEval=evaluation.idEvaluation AND
+                                                          evaluation.cinEvalue = employee.cin AND
+                                                          employee.poste=dp.idDirectionPostes AND
+                                                          dp.Poste=poste.idPoste AND
+                                                          poste.idPoste=$idPoste AND
+                                                          reponse.idEmployee=employee.cin
 
+                                                    GROUP BY employee.cin
+                                                     ORDER BY employee.cin
+                                                    ");
+
+        return $query->getResult();
+    }
 } 
