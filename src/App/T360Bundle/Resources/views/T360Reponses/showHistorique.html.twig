@@ -1,5 +1,14 @@
 {% extends 'AppT360Bundle::BasePage.html.twig' %}
 
+{% block headerName %}
+    <h1>Historique d'évaluation de : {{ employee.nom|capitalize }}
+        &nbsp;{{ employee.prenom|capitalize }}</h1>
+    <h1>
+        <small>{{ employee.poste.poste|capitalize }}
+            &nbsp; {{ employee.poste.direction }}</small>
+    </h1>
+{% endblock %}
+
 {% block body -%}
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts-more.js') }}"></script>
@@ -16,10 +25,10 @@
                 data: []
             };
         }
-        function getValueToDisplay(year,axe,array){
-            var result="";
-            for(var valeur in array[year][axe]){
-                result+="<strong>"+valeur+'</strong> : '+array[year][axe][valeur]+' <br/>';
+        function getValueToDisplay(year, axe, array) {
+            var result = "";
+            for (var valeur in array[year][axe]) {
+                result += "<strong>" + valeur + '</strong> : ' + array[year][axe][valeur] + ' <br/>';
 
             }
             return result;
@@ -36,9 +45,17 @@
             var compteur = 0;
             var sommeAvrg = 0;
             var detailsArray = {};
+            var Months = ["janv", "Févr", "Mars", "avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"];
 
             for (var i = 0; i < jsonObjects.length; i++) {
-                var year = (new Date(jsonObjects[i].dateDebut)).getFullYear();
+//                var year = (new Date(jsonObjects[i].dateDebut)).getFullYear();
+
+
+                var date = new Date(jsonObjects[i].dateDebut);
+//                var locale="Fr-fr";
+                var year = Months[date.getMonth()] + " " + date.getFullYear();
+
+
                 if ($.inArray(year, axis) < 0) {
                     axis.push(year);
                 }
@@ -107,7 +124,7 @@
                     detailsArray[year][jsonObjects[i].libelle][jsonObjects[i].enonce] = jsonObjects[i].average;
                 }
             }
-
+            console.log(data);
 
             Highcharts.setOptions({
                 colors: ['#ED1A3B', '#4596D1', '#F8981D', '#034EA2']
@@ -132,8 +149,8 @@
                         color: '#808080'
                     }]
                 },
-                credits : {
-                  enabled: false
+                credits: {
+                    enabled: false
                 },
                 legend: {
                     layout: 'vertical',
@@ -155,7 +172,7 @@
                                         },
                                         outlineType: 'rounded-white',
                                         headingText: this.series.name,
-                                        maincontentText: getValueToDisplay(this.category,this.series.name,detailsArray),
+                                        maincontentText: getValueToDisplay(this.category, this.series.name, detailsArray),
                                         width: 320
                                     });
                                 }

@@ -2,8 +2,10 @@
 
 security:
     encoders:
-
-        DataLayerBundle\Entity\Employees: plaintext
+        DataLayerBundle\Entity\Employees:
+          algorithm:   sha1
+          iterations: 1
+          encode_as_base64: false
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -19,14 +21,25 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        rest_login:
+                    # Cette expression régulière permet de prendre /login (mais pas /login_check !)
+                    pattern:   ^/service*
+                    anonymous: true # On autorise alors les anonymes sur ce pare-feu
+        register_login:
+                    # Cette expression régulière permet de prendre /login (mais pas /login_check !)
+                    pattern:   ^/registerbegin*
+                    anonymous: true # On autorise alors les anonymes sur ce pare-feu
+
         main_login:
             # Cette expression régulière permet de prendre /login (mais pas /login_check !)
             pattern:   ^/login$
             anonymous: true # On autorise alors les anonymes sur ce pare-feu
 
+
+
         main:
             pattern: ^/
-            anonymous: true
+            anonymous: false
             provider: main
             form_login:
                 login_path: login

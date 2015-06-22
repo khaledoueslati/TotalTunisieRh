@@ -1,7 +1,7 @@
 {% extends 'AppT360Bundle::BasePage.html.twig' %}
 
 {% block headerName %}
-    <h1>Liste des Evaluations 360</h1>
+    <h1>Liste des Employés</h1>
 {% endblock %}
 {% block body -%}
     <link href="{{ asset('bundles/AppT360/css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
@@ -51,7 +51,7 @@
 
                             <a href="{{ path('get_historique_results',{ 'cin': entity.cin }) }}"
                                class="btn btn-primary hvr-grow"><span
-                                        class="fa fa-line-chart">&nbsp; Resultats</span></a>
+                                        class="fa fa-line-chart">&nbsp; Historique</span></a>
 
 
 

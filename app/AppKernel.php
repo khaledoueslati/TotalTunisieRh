@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new App\T360Bundle\AppT360Bundle(),
             new OCUserBundle\OCUserBundle(),
             new App\CommonBundle\AppCommonBundle(),
+            new App\RestBundle\AppRestBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

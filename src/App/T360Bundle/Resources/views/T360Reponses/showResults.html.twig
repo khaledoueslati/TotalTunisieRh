@@ -1,13 +1,23 @@
 {% extends 'AppT360Bundle::BasePage.html.twig' %}
 
+{% block headerName %}
+
+    <h1>Résultat d'évaluation de : {{ eval.cinEvalue.nom|capitalize }}
+        &nbsp;{{ eval.cinEvalue.prenom|capitalize }}</h1>
+    <h1>
+        <small>{{ eval.cinEvalue.poste.poste|capitalize }}
+            &nbsp; {{ eval.cinEvalue.poste.direction }}</small>
+    </h1>
+{% endblock %}
+
 {% block body -%}
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/highcharts-more.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/AppT360/js/exporting.js') }}"></script>
     <script>
     $(document).ready(function () {
-        console.log("ready to charge data ");
-        console.log("{{ path('get_reponses_by_eval',{ 'idEval': idEval }) }}");
+        {#console.log("ready to charge data ");#}
+        {#console.log("{{ path('get_reponses_by_eval',{ 'idEval': eval.idEvaluation }) }}");#}
         Highcharts.setOptions({
             colors: ['#ED1A3B', '#4596D1', '#F8981D', '#034EA2','#434348']
         });
@@ -79,9 +89,6 @@
                     gridLineInterpolation: 'polygon',
                     lineWidth: 0,
                     min: 0
-                },
-                exporting: {
-                    enabled: false
                 },
                 credits: {
                     enabled: false

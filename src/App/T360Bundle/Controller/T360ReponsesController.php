@@ -331,7 +331,8 @@ class T360ReponsesController extends Controller
 
         $ReponsesNumber = $this->container->get('t360reponse.service')->getReponsesNumberByEval($idEval);
         $all = $this->container->get('employee.service')->getNumberPersonToEvaluate($idEval);
-        return array("idEval" => $idEval, "nombreDeReponse" => $ReponsesNumber, "allPersonToEvaluate" => $all,"reponseGenerale"=>$responseGeneraleJson);
+        $eval=$this->get("t360evaluation.service")->getById($idEval);
+        return array("eval" => $eval, "nombreDeReponse" => $ReponsesNumber, "allPersonToEvaluate" => $all,"reponseGenerale"=>$responseGeneraleJson);
     }
 
 
@@ -495,6 +496,7 @@ class T360ReponsesController extends Controller
      */
     public function showHistoriqueAction($cin)
     {
+        $employee=$this->get("employee.service")->getById($cin);
         $serializer = $this->container->get('jms_serializer');
         $reponses = $this->get("t360reponse.service")->getAvgHistoriqueReponseByEmployee($cin);
         // if(sizeof($evaluations_array)!=0)
@@ -502,7 +504,7 @@ class T360ReponsesController extends Controller
         //$evaluations_array[0]->getId();
         $response = new Response($JsonResult);
 //        $response
-        return array("JsonResult" => utf8_encode($response->getContent()));
+        return array("employee"=>$employee,"JsonResult" => utf8_encode($response->getContent()));
 //        return array("cin"=>$cin);
 //        return $response;
     }

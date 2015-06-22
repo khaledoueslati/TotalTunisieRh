@@ -1,3 +1,8 @@
+app_rest:
+    resource: "@AppRestBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 app_common:
     resource: "@AppCommonBundle/Controller/"
     type:     annotation

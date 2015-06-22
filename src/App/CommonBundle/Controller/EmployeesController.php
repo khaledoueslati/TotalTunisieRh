@@ -150,6 +150,8 @@ class EmployeesController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $pass=$entity->getPassword();
+            $entity->setPassword(sha1($pass));
             $em->flush();
 
             return $this->redirect($this->generateUrl('t360evaluations'));
@@ -278,7 +280,7 @@ class EmployeesController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('employees_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('employees', array('id' => $id)));
         }
 
         return array(

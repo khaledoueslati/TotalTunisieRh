@@ -27,14 +27,36 @@
 
     <script>
         $(document).ready(function () {
-
+            var sent=0;
             var sendigURL = "{{ path("save_reponse") }}";
             var countQuestion = "{{ questionCount }}";
             var id_eval_ = "{{ evaluation.idEvaluation }}";
             var id_employee_ = "{{ app.user.cin }}";
             var rowWithtooltip = 0;
-
+            var check = "{{ check }}";
             var reponses = [];
+
+            var old_reponse_JSON_text=$("#old-reponse-json").text();
+            if(old_reponse_JSON_text!="false"){
+                var old_reponse_JSON = JSON.parse(old_reponse_JSON_text);
+                $("#old-reponse-json").remove();
+
+                for (var i = 0; i < old_reponse_JSON.length; i++) {
+                    reponses[i] = {
+                        id: old_reponse_JSON[i].id,
+                        valeur: old_reponse_JSON[i].valeur,
+                        id_eval: old_reponse_JSON[i][2],
+                        id_employee: old_reponse_JSON[i][1],
+                        id_question: old_reponse_JSON[i][3]
+                    };
+                }
+            }
+
+
+
+
+            console.log(reponses);
+
             $('input').click(function () {
                 var row = $(this).attr('data-row');
                 var value = $(this).attr('value');
@@ -53,7 +75,24 @@
                 var value = $(this).attr('value');
                 var questionId = $(this).attr('data-question-id');
 //                if(row in reponses){console.log("ok!")}
-                reponses[row] = {valeur: value, id_eval: id_eval_, id_employee: id_employee_, id_question: questionId};
+                if (reponses[row]) {
+                    var loadId = reponses[row].id;
+                    reponses[row] = {
+                        id: loadId,
+                        valeur: value,
+                        id_eval: id_eval_,
+                        id_employee: id_employee_,
+                        id_question: questionId
+                    };
+                } else {
+                    reponses[row] = {
+                        valeur: value,
+                        id_eval: id_eval_,
+                        id_employee: id_employee_,
+                        id_question: questionId
+                    };
+                }
+
                 var parentRowId = $(this).parent().parent().parent().attr('id');
                 if (parentRowId == rowWithtooltip) {
                     $.powerTip.destroy($("#" + rowWithtooltip));
@@ -70,7 +109,7 @@
 
             $("#send_responses_button").click(function () {
                 var verif = true;
-
+                $("#progress-send-bar").css("width", "0%");
                 if (reponses.length == 0) {
                     verif = false;
                     var mouseOnDiv = $('#0');
@@ -115,40 +154,44 @@
                 console.log(verif);
                 console.log(JSON.stringify(reponses));
                 if (verif) {
-                    console.log("sending to ...." + sendigURL);
-                    $("#progress-container").show();
-                    $.ajax({
-                        url: sendigURL,
-                        type: 'POST',
-                        data: JSON.stringify(reponses),
-                        processData: false,
-                        ContentType: 'application/json',
-                        dataType: 'json',
-                        xhr: function () {
-                            var xhr = new window.XMLHttpRequest();
-                            xhr.upload.addEventListener("progress", function (evt) {
-                                if (evt.lengthComputable) {
-                                    var percentComplete = (evt.loaded / evt.total) * 100;
-                                    $("#progress-send-bar").css("width", percentComplete + "%");
+                    if(sent==0){
+                        console.log("sending to ...." + sendigURL);
+                        $("#progress-container").show();
+                        $.ajax({
+                            url: sendigURL,
+                            type: 'POST',
+                            data: JSON.stringify(reponses),
+                            processData: false,
+                            ContentType: 'application/json',
+                            dataType: 'json',
+                            xhr: function () {
+                                var xhr = new window.XMLHttpRequest();
+                                xhr.upload.addEventListener("progress", function (evt) {
+                                    if (evt.lengthComputable) {
+                                        var percentComplete = (evt.loaded / evt.total) * 100;
+                                        $("#progress-send-bar").css("width", percentComplete + "%");
 //                                    console.log(percentComplete);
-                                    //Do something with upload progress here
-                                }
-                            }, false);
+                                        //Do something with upload progress here
+                                    }
+                                }, false);
 
 
-                            return xhr;
-                        },
-                        success: function (resp) {
+                                return xhr;
+                            },
+                            success: function (resp) {
 //                           console.log(resp);
-                            if (resp != 1) {
+                                if (resp != 1) {
+                                    alert("reponses non evoyer. veuillez réessailler");
+                                }
+                            },
+                            error: function (resp) {
+                                console.log(resp);
                                 alert("reponses non evoyer. veuillez réessailler");
                             }
-                        },
-                        error: function (resp) {
-                            console.log(resp);
-                            alert("reponses non evoyer. veuillez réessailler");
-                        }
-                    });
+                        });
+                    }else{
+                        alert("vous avez deja envoyé les réponses");
+                    }
                 }
 //                else if (reponses.length < countQuestion) {
 //                    rowWithtooltip=reponses.length;
@@ -186,6 +229,7 @@
 
         });
     </script>
+
     <div class="container-fluid">
         {% for i in 0..questions|length-1 %}
             <div class="row">
@@ -350,4 +394,11 @@
 
     </div>
 
+    <div id="old-reponse-json" hidden="hidden">
+        {% if oldReponseJSON is defined %}
+            {{ oldReponseJSON }}
+        {% else %}
+            false
+        {% endif %}
+    </div>
 {% endblock %}

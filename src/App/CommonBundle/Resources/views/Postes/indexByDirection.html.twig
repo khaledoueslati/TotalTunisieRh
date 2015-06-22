@@ -80,7 +80,15 @@
                                     <td><span class="badge">{{ poste.id_poste }}</span></td>
                                     <td>{{ poste.poste_libelle }}</td>
                                     <td>{{ poste.poste_niveau }}</td>
-                                    <td></td>
+                                    <td><a data-href="{{ path('postes_edit', { 'id': poste.id_poste }) }}"
+                                           class="btn btn-primary hvr-grow clickable-poste" data-toggle="modal"
+                                           data-target="#edit_poste"><span
+                                                    class="fa fa-edit">&nbsp; Edit</span></a>
+
+                                        <a href="{{ path('postes_delete', { 'id': poste.id_poste }) }}"
+                                           class="btn btn-box-tool hvr-grow clickable" data-toggle="modal"
+                                           data-target="#edit_employee"><span
+                                                    class="fa fa-remove">&nbsp; Delete</span></a></td>
                                 </tr>
 
                             {% endfor %}

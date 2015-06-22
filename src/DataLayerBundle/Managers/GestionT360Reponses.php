@@ -227,7 +227,7 @@ class GestionT360Reponses
     public function  getReponseByEvalByCin($idEval, $cinEvaluateur)
     {
 
-        $query = $this->EntityManager->createQuery("select reponse.id , reponse.valeur , IDENTITY (reponse.idEmployee), IDENTITY (reponse.idEval), IDENTITY (reponse.idQuestion) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cinEvaluateur AND reponse.idEval=$idEval");
+        $query = $this->EntityManager->createQuery("select reponse.id, reponse.valeur , IDENTITY (reponse.idEmployee), IDENTITY (reponse.idEval), IDENTITY (reponse.idQuestion) from DataLayerBundle:T360Reponses reponse WHERE reponse.idEmployee=$cinEvaluateur AND reponse.idEval=$idEval");
 
         return $query->getResult();
 

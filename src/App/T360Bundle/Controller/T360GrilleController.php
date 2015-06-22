@@ -29,7 +29,7 @@ class T360GrilleController extends Controller
                 $countQuestions+=count($temp);
                 array_push($questions,$temp);
             }
-            return array("evaluation"=>$evaluation,"axes"=>$evaluation->getIdAxe(),"questions"=>$questions ,"questionCount"=>$countQuestions);
+            return array("evaluation"=>$evaluation,"axes"=>$evaluation->getIdAxe(),"questions"=>$questions ,"questionCount"=>$countQuestions,"check"=>0);
         }elseif ($resp==1)
         {
 
@@ -37,12 +37,14 @@ class T360GrilleController extends Controller
             $oldResponses=$this->get("t360reponse.service")->getReponseByEvalByCin($idEval,$this->get("security.context")->getToken()->getUser()->getCin());
             $questions=array();
             $countQuestions=0;
+            $serializer = $this->container->get('jms_serializer');
+            $oldResponsesJSON = $serializer->serialize($oldResponses, 'json');
             foreach ($evaluation->getIdAxe() as $idAxe){
                 $temp= $this->get("t360question.service")->getByAxe($idAxe);
                 $countQuestions+=count($temp);
                 array_push($questions,$temp);
             }
-            return array("evaluation"=>$evaluation,"axes"=>$evaluation->getIdAxe(),"questions"=>$questions ,"questionCount"=>$countQuestions,'oldReponses'=>$oldResponses);
+            return array("evaluation"=>$evaluation,"axes"=>$evaluation->getIdAxe(),"questions"=>$questions ,"questionCount"=>$countQuestions,'oldReponses'=>$oldResponses,'oldReponseJSON'=>$oldResponsesJSON,'check'=>1);
         }
     }
 

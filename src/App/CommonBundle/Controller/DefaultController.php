@@ -10,10 +10,14 @@ use DataLayerBundle\Form\EmployeesGestionType;
 use DataLayerBundle\Entity\Employees;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
+/**
+ * Class DefaultController
+ * @Route("/registerbegin")
+ */
 class DefaultController extends Controller
 {
     /**
-     * @Route("/registerbegin", name="register_begin")
+     * @Route("/", name="register_begin")
      * @Template()
      */
     public function registerBeginAction()
@@ -105,7 +109,8 @@ class DefaultController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-
+            $pass=$entity->getPassword();
+            $entity->setPassword(sha1($pass));
             $em->flush();
 
             return $this->redirect($this->generateUrl('login'));
